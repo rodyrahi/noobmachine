@@ -78,11 +78,11 @@
 
      
             <img src="add.png" alt="" srcset="" style="width: 6rem;" onclick="getcsv()">
-            <p id="file" >Chose a file</p>
+            <p id="file" >Choose a file</p>
           </div>
           </div>
           
-          <input class="m-2" type="file" id="csvFile" accept=".csv" style="display: none;" />
+          <input class="m-2" type="file" id="csvFile" onchange="getname()"  accept=".csv" style="display: none;" />
 
           <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -104,12 +104,15 @@
             <div class="tab-pane fade show active" id="london" role="tabpanel" aria-labelledby="london-tab">
               <div class="m-2">
                 <label for="units" class="form-label">Number of Neurons:</label>
-                <input type="number" class="form-control" min="1" id="units" placeholder="Units" oninput="createneurons()">
+                <input type="number" class="form-control" min="1" value="50" id="units" placeholder="Number Of Units" oninput="createneurons()">
+                <p class="text-muted"> Example: higher the neurons higher the calculations  </p>
+
               </div>
                 
               <div class="m-2">
-                <label for="inputshape" class="form-label">Number of Inputs:</label>
-                <input type="number" min="1" oninput="createInputs()" class="form-control" id="inputshape" placeholder="Input Shape">
+                <label for="inputshape" class="form-label">Labels (Inputs):</label>
+                <input type="number" min="1" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape">
+                <p class="text-muted"> Example: house price pridiction has , 'area' and 'room' are 2 inputs and price is to be predicted  </p>
               </div>
     
               <div id="params" class="px-2" style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"></div>
@@ -168,23 +171,30 @@
 
 
 <script>
+  addEventListener("load", (event) => { createInputs()
+    createneurons()
+    getcsv()
+  });
+
+
+
+
+ function getname(){
+  console.log('yes')
+  const fileInput = document.getElementById("csvFile");
+
+  var filename = fileInput.files[0].name;
+  document.getElementById("file").innerText = filename
+ }
 
 function getcsv() {
   console.log('click');
   const fileInput = document.getElementById("csvFile");
-  console.log(fileInput);
+
   fileInput.click();
 
-  var filename = fileInput.files[0].name;
-  document.getElementById("file").innerText = filename
 
-  const input = fileInput.files[0];
-  const reader = new FileReader();
 
-  reader.onload = async function (e) {
-    const text = e.target.result;
-      document.getElementById('output').innerText = text;
-    }
 
 }
 </script>
@@ -195,6 +205,8 @@ function getcsv() {
 
 
   async function processCSV() {
+
+
 
     var inputCount = 0;
     var inputs = [];
@@ -310,7 +322,7 @@ function getcsv() {
           input.type = "text";
           input.id = "input" + index;
           input.className = 'form-control';
-          input.placeholder = "Input " + (index + 1);
+          input.placeholder = "Value To Predict" + (index + 1);
           div.appendChild(input);
         }
 
