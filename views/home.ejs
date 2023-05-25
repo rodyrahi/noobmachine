@@ -136,6 +136,20 @@
                 <label for="learningRate">Learning Rate</label>
                 <input type="number" step="0.01" value="0.01" class="form-control" id="learningRate">
               </div>
+
+              <div class="mb-3">
+                <label for="epochs">Epochs</label>
+                <input type="number" step="1" value="1000" class="form-control" id="epochs">
+              </div>
+              <div class="mb-3">
+                <label for="algorithmSelect">Select Training Algorithm:</label>
+                <select class="form-select" id="algorithmSelect">
+                  <option value="sgd">Stochastic Gradient Descent (SGD)</option>
+                  <option value="adam">Adam</option>
+                  <option value="rmsprop">RMSprop</option>
+                  <!-- Add more training algorithms as needed -->
+                </select>
+              </div>
             </div>
             </div>
             <div class="tab-pane " id="tokyo" role="tabpanel" aria-labelledby="tokyo-tab">
@@ -255,6 +269,8 @@ function getcsv() {
         const units = parseInt(document.getElementById("units").value);
         const inputshape = parseInt(document.getElementById("inputshape").value);
         const learningrate = parseFloat(document.getElementById("learningRate").value);
+        const epochs = parseFloat(document.getElementById("epochs").value);
+
         const activation = document.getElementById("activation").value;
 
 
@@ -307,7 +323,7 @@ function getcsv() {
             model.compile({ loss: 'meanSquaredError', optimizer: tf.train.sgd(learningrate) });
 
             // Train the model
-            await model.fit(normalizedXs, normalizedYs, { epochs: 1000 });
+            await model.fit(normalizedXs, normalizedYs, { epochs: epochs });
 
             // Normalize an arbitrary input value for prediction
             const input = [56, 3.3]; // Example input values
