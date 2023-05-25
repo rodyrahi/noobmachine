@@ -111,12 +111,12 @@
                 
               <div class="m-2">
                 <label for="inputshape" class="form-label">Labels (Inputs):</label>
-                <input type="number" min="1" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape">
+                <input type="number" min="2" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape">
                 <p class="text-muted"> Example: house price pridiction has , 'area' and 'room' are 2 inputs and price is to be predicted  </p>
               </div>
     
               <div id="params" class="px-2" style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"></div>
-              <button class="btn btn-dark m-2" onclick="processCSV()">PREDICT</button><br>
+              <button class="btn btn-warning btn-lg m-2" onclick="processCSV()">PREDICT</button><br>
 
             </div>
             <div class="tab-pane " id="paris" role="tabpanel" aria-labelledby="paris-tab">
