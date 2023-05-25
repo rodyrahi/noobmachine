@@ -65,7 +65,7 @@
     <div class="row">
       
       <h1 class="text-light m-2 mb-1 noob-heading">NOOB MACHINE</h1>
-      <p class="text-light m-2 my-1 " >LINEAR REGRATION</p>
+      <p class="text-light m-2 my-1 " >LINEAR REGRESSION</p>
    
       <div class="col-md-6">
 
@@ -298,7 +298,7 @@ function getcsv() {
             const normalizedXs = tf.div(tf.sub(tf.tensor2d(xs), xsMean), xsStd);
             const normalizedYs = tf.div(tf.sub(tf.tensor2d(ys), ysMean), ysStd);
 
-            
+
             // Create a TensorFlow.js model
             const model = tf.sequential();
             model.add(tf.layers.dense({ units: units, inputShape: [inputshape], activation: activation }));
