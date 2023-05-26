@@ -166,8 +166,8 @@
   const reader = new FileReader();
   reader.onload = function(event) {
     const fileContent = event.target.result;
-
-
+    
+   
     dfd.readCSV(input) //assumes file is in CWD
               .then(df => {
                 //  document.getElementById('output').innerText = df.table();
@@ -205,7 +205,7 @@
       }
 
 
-
+      drawANNLayers()
 
 
 

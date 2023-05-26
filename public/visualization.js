@@ -58,8 +58,8 @@ function drawANNLayers() {
     // Calculate the y-position for each node
     const numNodes = d.units;
     const availableWidth = width / (modelArchitecture.length + 1) - 2 * layerMargin;
-    const maxNeurons = Math.floor(availableWidth / (0.5 * nodeRadius));
-    const adjustedNodeRadius = Math.min(maxNeurons, nodeRadius, availableWidth / (3 * numNodes));
+    const maxNeurons = Math.floor(availableWidth / (1.4 * nodeRadius));
+    const adjustedNodeRadius = Math.min(maxNeurons, nodeRadius, availableWidth / (2 * numNodes));
 
     const nodeYPositions = d3.range(numNodes).map(j => (j + 1) * (height / (numNodes + 1)) - height / 2);
 
