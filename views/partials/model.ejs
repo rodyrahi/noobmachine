@@ -1,0 +1,113 @@
+<div class="border p-1 " style="border-radius: 1rem; background-color: white;">
+  <!-- Options -->
+  <div class=" text-center mt-2" style=" ">
+    <div class="image-container" style="display: inline-block;">
+
+      <img src="add.png" alt="" srcset="" style="width: 6rem;" onclick="getcsv()">
+      <p id="file">Choose a file</p>
+    </div>
+  </div>
+
+  <input class="m-2" type="file" id="csvFile" onchange="getname()" accept=".csv" style="display: none;" />
+
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active text-dark " id="london-tab" data-bs-toggle="tab" data-bs-target="#london" type="button" role="tab" aria-controls="london" aria-selected="true">Predict</button>
+    </li>
+    <li class="nav-item " role="presentation">
+      <button class="nav-link text-dark " id="paris-tab" data-bs-toggle="tab" data-bs-target="#paris" type="button" role="tab" aria-controls="paris" aria-selected="false">Advanced</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link text-dark " id="tokyo-tab" data-bs-toggle="tab" data-bs-target="#tokyo" type="button" role="tab" aria-controls="tokyo" aria-selected="false">Upload Model</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link text-dark " id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button" role="tab" aria-controls="csv" aria-selected="false">Csv</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link text-dark " id="api-tab" data-bs-toggle="tab" data-bs-target="#api" type="button" role="tab" aria-controls="api" aria-selected="false">Api</button>
+    </li>
+  </ul>
+
+  <!-- Tab content -->
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane show active" id="london" role="tabpanel" aria-labelledby="london-tab">
+      <div class="m-2">
+        <label for="units" class="form-label">Number of Neurons:</label>
+        <input type="number" class="form-control" min="1" value="50" id="units" placeholder="Number Of Units" oninput="createneurons()">
+        <p class="text-muted"> Example: higher the neurons higher the calculations </p>
+
+      </div>
+
+      <div class="m-2" style="display: none;">
+        <label for="inputshape" class="form-label">Labels (Inputs):</label>
+        <input type="number" min="2" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape" >
+        <p class="text-muted"> Example: house price pridiction has , 'area' and 'room' are 2 inputs and price is to be predicted </p>
+      </div>
+
+      <div id="params" class="px-2" style="display: grid; grid-template-columns: repeat(4, 1fr); grid-gap: 10px;"></div>
+      <button class="btn btn-warning btn-lg m-2" onclick="processCSV()">PREDICT</button><br>
+
+    </div>
+    <div class="tab-pane " id="paris" role="tabpanel" aria-labelledby="paris-tab">
+      <div class="m-2">
+        <div class="mb-3 ">
+
+          <label for="activation">Activation Function</label>
+          <select class="form-select" id="activation">
+            <option value="sigmoid">Sigmoid</option>
+            <option selected value="relu">ReLU</option>
+            <option value="tanh">Tanh</option>
+            <!-- Add more activation functions as needed -->
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="learningRate">Learning Rate</label>
+          <input type="number" step="0.01" value="0.01" class="form-control" id="learningRate">
+        </div>
+
+        <div class="mb-3">
+          <label for="epochs">Epochs</label>
+          <input type="number" step="1" value="1000" class="form-control" id="epochs">
+        </div>
+        <div class="mb-3">
+          <label for="algorithmSelect">Select Training Algorithm:</label>
+          <select class="form-select" id="algorithmSelect">
+            <option value="sgd">Stochastic Gradient Descent (SGD)</option>
+            <option value="adam">Adam</option>
+            <option value="rmsprop">RMSprop</option>
+            <!-- Add more training algorithms as needed -->
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane " id="tokyo" role="tabpanel" aria-labelledby="tokyo-tab">
+      <div class="p-2 m-2 border rounded bg-dark" style="color: white;">
+
+        <input class="my-2" type="file" id="model" accept=".bin" /><br>
+      </div>
+    </div>
+
+    <div class="tab-pane " id="csv" role="tabpanel" aria-labelledby="csv-tab">
+      <!-- <p class="m-2" id="output" ></p> -->
+      <div class="" id="plot_div"></div>
+      <!-- <textarea class="form-control  " id="output" rows="10" style="white-space: pre-wrap;"></textarea> -->
+    </div>
+
+    <div class="tab-pane " id="api" role="tabpanel" aria-labelledby="api-tab">
+      <div class="m-2">
+        <p>http://localhost:3333/api/ml</p>
+      </div>
+      
+
+    </div>
+
+  </div>
+  <hr>
+
+  <div class="px-2" style="">
+    <p class="m-0"> After Prediction Of Your ML Model It Will Be Saved In The Downloads Folder. 😊 </p>
+  </div>
+  <h3 class="m-2 mb-3" id="prediction"></h3>
+
+</div>
