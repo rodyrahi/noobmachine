@@ -1,5 +1,5 @@
 
-
+var savemodel
 
 async function processCSV() {
 
@@ -117,9 +117,11 @@ async function processCSV() {
         
           console.log('Predicted price:', price);
           document.getElementById('prediction').innerText = 'Prediction : ' + price;
-        
-          // await model.save('downloads://my_model');
-          // console.log('Model saved.');
+          document.getElementById('prediction').innerHTML +=`<br>
+          <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>`
+
+          savemodel = model
+
         };
         
 
@@ -130,4 +132,9 @@ async function processCSV() {
 
 }
 
+async function downloadCSV() {
 
+
+  await savemodel.save('downloads://my_model');
+          console.log('Model saved.');
+}
