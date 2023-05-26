@@ -1,76 +1,98 @@
 
-function visualizeANN(model) {
-    const svg = d3
-      .select("body")
-      .append("svg")
-      .attr("width", 600)
-      .attr("height", 400);
   
+const inputfields = document.querySelectorAll('input');
 
-      const layers = model.layers.map((layer) => layer.config);
+// Attach oninput event listener to each input element
+console.log(inputfields);
 
-      const layerCount = layers.length;
-  
-    const margin = { top: 20, right: 20, bottom: 20, left: 20 };
-    const width = 600 - margin.left - margin.right;
-    const height = 400 - margin.top - margin.bottom;
-  
-    // Calculate the max number of neurons in a single layer
-    const maxNeurons = d3.max(layers, (layer) => layer.units);
-  
-    // Calculate the spacing for layers and neurons
-    const layerSpacing = width / layerCount;
-    const neuronSpacing = height / maxNeurons;
-  
-    // Function to calculate the x-coordinate for a layer
-    const layerX = (i) => i * layerSpacing;
-  
-    // Function to calculate the y-coordinate for a neuron
-    const neuronY = (i) => height - i * neuronSpacing;
-  
-    // Draw the connections between neurons
-    for (let i = 1; i < layerCount; i++) {
-      const currentLayer = layers[i];
-      const previousLayer = layers[i - 1];
-  
-      const currentLayerX = layerX(i);
-      const previousLayerX = layerX(i - 1);
-  
-      for (let j = 0; j < currentLayer.units; j++) {
-        const currentNeuronY = neuronY(j);
-  
-        for (let k = 0; k < previousLayer.units; k++) {
-          const previousNeuronY = neuronY(k);
-  
-          const weight = model.getWeights()[2 * (i - 1)].get(k, j).toFixed(2);
-          const color = weight > 0 ? "green" : "red";
-  
-          svg
-            .append("line")
-            .attr("x1", previousLayerX)
-            .attr("y1", previousNeuronY)
-            .attr("x2", currentLayerX)
-            .attr("y2", currentNeuronY)
-            .attr("stroke", color)
-            .attr("stroke-width", Math.abs(weight) * 2);
-        }
-      }
+inputfields.forEach(function(input) {
+  input.oninput = function() {
+
+
+    console.log('change');
+    drawANNLayers()
+  };
+});
+
+
+const width = 600;
+const height = 600;
+const layerMargin = 100;
+const nodeRadius = 10; // Adjust the node radius to make neurons smaller
+
+// Create a SVG container using D3.js
+const svg = d3.select('#ann-svg')
+  .attr('width', width)
+  .attr('height', height);
+
+// Function to draw the ANN layers
+function drawANNLayers() {
+
+  svg.selectAll('.layer').remove();
+  const units = parseInt(document.getElementById("units").value);
+  const inputshape = parseInt(document.getElementById("inputshape").value);
+  const activation = document.getElementById("activation").value;
+
+  const modelArchitecture = [
+    { layerType: 'input', units: inputshape },
+    { layerType: 'dense', units: units, activation: activation },
+    { layerType: 'dense', units: 1, activation: 'sigmoid' }
+  ];
+
+  console.log(modelArchitecture);
+  // Calculate the x-position for each layer
+  const layerXPositions = modelArchitecture.map((_, i) => (i + 1) * (width / (modelArchitecture.length + 1)));
+
+  // Draw the layers
+  const layers = svg.selectAll('.layer')
+    .data(modelArchitecture)
+    .enter()
+    .append('g')
+    .attr('class', 'layer')
+    .attr('transform', (_, i) => `translate(${layerXPositions[i]}, ${height / 2})`);
+
+  // Draw the nodes in each layer
+  layers.each(function (d, i) {
+    const layer = d3.select(this);
+
+    // Calculate the y-position for each node
+    const numNodes = d.units;
+    const availableWidth = width / (modelArchitecture.length + 1) - 2 * layerMargin;
+    const maxNeurons = Math.floor(availableWidth / (0.5 * nodeRadius));
+    const adjustedNodeRadius = Math.min(maxNeurons, nodeRadius, availableWidth / (3 * numNodes));
+
+    const nodeYPositions = d3.range(numNodes).map(j => (j + 1) * (height / (numNodes + 1)) - height / 2);
+
+    // Draw the nodes
+    const nodes = layer.selectAll('.node')
+      .data(nodeYPositions)
+      .enter()
+      .append('circle')
+      .attr('class', 'node')
+      .attr('cx', 0)
+      .attr('cy', d => d)
+      .attr('r', adjustedNodeRadius*-1);
+
+    // Add labels to the input layer nodes
+    if (i === 0) {
+      nodes.each(function () {
+        const node = d3.select(this);
+        const inputLabel = node.append('text')
+          .text('Input')
+          .attr('x', adjustedNodeRadius + 5)
+          .attr('y', 5);
+      });
     }
-  
-    // Draw the neurons
-    for (let i = 0; i < layerCount; i++) {
-      const layer = layers[i];
-      const layerXPosition = layerX(i);
-  
-      for (let j = 0; j < layer.units; j++) {
-        const neuronYPosition = neuronY(j);
-  
-        svg
-          .append("circle")
-          .attr("cx", layerXPosition)
-          .attr("cy", neuronYPosition)
-          .attr("r", 10)
-          .attr("fill", "steelblue");
-      }
+
+    // Add labels to the hidden and output layer nodes
+    if (i > 0) {
+      nodes.each(function () {
+        const node = d3.select(this);
+        const activationLabel = node.append('text')
+          .text(d.activation)
+          .attr('x', adjustedNodeRadius + 5)
+          .attr('y', 5);
+      });
     }
-  }
+  });
+}
