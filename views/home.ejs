@@ -5,6 +5,8 @@
 
 
 <style>
+
+
     .noob-heading {
       font-family: 'Oswald', sans-serif;
     }
@@ -50,6 +52,28 @@
     }
 
 
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    .ann-svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .node {
+      fill: #3b7dff; /* Update the fill color here */
+      stroke: #828282;
+    }
+
+
+
+
 </style>
 <body style="background-color: black; font-family: 'Noto Sans JP', sans-serif;">
   <div class="container">
@@ -65,7 +89,10 @@
 
       <div class="col-md-6">
         <!-- Neurons -->
-        <div class="d-flex flex-column p-3  bg-light" id="neuronContainer" style="border-radius: 1rem;">  </div>
+        <div class="d-flex flex-column p-3  bg-light" id="neuronContainer" style="border-radius: 1rem;">
+          <svg class="ann-svg" id="ann-svg" width="600" height="400"></svg>
+
+        </div>
       </div>
     </div>
 
@@ -82,15 +109,146 @@
 <script src="visualization.js"></script>
 
 
+<script>
+    // Create a sample ANN model architecture
+    const modelArchitecture = [
+      { layerType: 'input', units: 4 },
+      { layerType: 'dense', units: 8, activation: 'relu' },
+      { layerType: 'dense', units: 1, activation: 'sigmoid' }
+    ];
+
+// Define the dimensions and positions for visualization
+// Define the dimensions and positions for visualization
+const width = 600;
+const height = 400;
+const layerMargin = 100;
+const nodeRadius = 10; // Adjust the node radius to make neurons smaller
+
+// Create a SVG container using D3.js
+const svg = d3.select('#ann-svg')
+  .attr('width', width)
+  .attr('height', height);
+
+// Function to draw the ANN layers
+function drawANNLayers(modelArchitecture) {
+  // Calculate the x-position for each layer
+  const layerXPositions = modelArchitecture.map((_, i) => (i + 1) * (width / (modelArchitecture.length + 1)));
+
+  // Draw the layers
+  const layers = svg.selectAll('.layer')
+    .data(modelArchitecture)
+    .enter()
+    .append('g')
+    .attr('class', 'layer')
+    .attr('transform', (_, i) => `translate(${layerXPositions[i]}, ${height / 2})`);
+
+  // Draw the nodes in each layer
+  layers.each(function (d, i) {
+    const layer = d3.select(this);
+
+    // Calculate the y-position for each node
+    const numNodes = d.units;
+    const availableWidth = width / (modelArchitecture.length + 1) - 2 * layerMargin;
+    const maxNeurons = Math.floor(availableWidth / (2 * nodeRadius));
+    const adjustedNodeRadius = Math.min(maxNeurons, nodeRadius, availableWidth / (2 * numNodes));
+
+    const nodeYPositions = d3.range(numNodes).map(j => (j + 1) * (height / (numNodes + 1)) - height / 2);
+
+    // Draw the nodes
+    const nodes = layer.selectAll('.node')
+      .data(nodeYPositions)
+      .enter()
+      .append('circle')
+      .attr('class', 'node')
+      .attr('cx', 0)
+      .attr('cy', d => d)
+      .attr('r', adjustedNodeRadius*-1);
+
+    // Add labels to the input layer nodes
+    if (i === 0) {
+      nodes.each(function () {
+        const node = d3.select(this);
+        const inputLabel = node.append('text')
+          .text('Input')
+          .attr('x', adjustedNodeRadius + 5)
+          .attr('y', 5);
+      });
+    }
+
+    // Add labels to the hidden and output layer nodes
+    if (i > 0) {
+      nodes.each(function () {
+        const node = d3.select(this);
+        const activationLabel = node.append('text')
+          .text(d.activation)
+          .attr('x', adjustedNodeRadius + 5)
+          .attr('y', 5);
+      });
+    }
+  });
+}
+    // Draw the ANN layers
+
+
+</script>
+
 
 
 
 
 <script>
   addEventListener("load", (event) => { createInputs()
-  createneurons()
+  // createneurons()
   getcsv()
+
+      const units = parseInt(document.getElementById("units").value);
+      const inputshape = parseInt(document.getElementById("inputshape").value);
+      const learningrate = parseFloat(document.getElementById("learningRate").value);
+      const epochs = parseFloat(document.getElementById("epochs").value);
+      const activation = document.getElementById("activation").value;
+
+
+  const modelArchitecture = [
+      { layerType: 'input', units: inputshape },
+      { layerType: 'dense', units: units, activation: activation },
+      { layerType: 'dense', units: 1, activation: 'sigmoid' }
+    ];
+
+
+    drawANNLayers(modelArchitecture);
+
+
   });
+
+  const input1 = document.getElementById('units');
+const input2 = document.getElementById('inputshape');
+const input3 = document.getElementById('activation');
+
+// Add event listeners to the input elements
+input1.addEventListener('input', handleInputChange);
+input2.addEventListener('input', handleInputChange);
+input3.addEventListener('input', handleInputChange);
+
+// Function to handle input change
+function handleInputChange(event) {
+  const units = parseInt(input1.value);
+  const inputshape = parseInt(input2.value);
+  const activation = input3.value;
+
+  const modelArchitecture = [
+    { layerType: 'input', units: inputshape },
+    { layerType: 'dense', units: units, activation: activation },
+    { layerType: 'dense', units: 1, activation: 'sigmoid' }
+  ];
+
+  drawANNLayers(modelArchitecture);
+}
+
+// Call the function to draw the initial ANN layers
+handleInputChange();
+
+
+
 
 
 
@@ -137,6 +295,10 @@
         const features = data.slice(0, -1); // Extract all but the last element as features
         const target = [data[data.length - 1]]; // Last element is the target
         const header = lines[0].split(",");
+
+              
+        document.getElementById("inputshape").value = features.length;
+
         createInputs(features.length , header)
 
       }
@@ -166,8 +328,6 @@
 
 
 
-
-
   function createInputs(inputShape , features) {
         // const inputShape = parseInt(document.getElementById("inputshape").value);
         const neuronCount = parseInt(document.getElementById("units").value);
@@ -194,28 +354,28 @@
       
       }
   
-  function createneurons() {
-        const neuronCount = parseInt(document.getElementById("units").value);
-        const neuronContainer = document.getElementById("neuronContainer");
+  // function createneurons() {
+  //       const neuronCount = parseInt(document.getElementById("units").value);
+  //       const neuronContainer = document.getElementById("neuronContainer");
 
-        // Clear the existing circles
-        neuronContainer.innerHTML = "";
+  //       // Clear the existing circles
+  //       neuronContainer.innerHTML = "";
 
-        // Create and append the SVG circles
-        for (let i = 0; i < neuronCount; i++) {
-          const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-          svg.setAttribute("class", "neuron-circle");
-          svg.setAttribute("viewBox", "0 0 24 24");
-          svg.innerHTML = ` <defs>
-        <linearGradient id="neuron-gradient" gradientTransform="rotate(90)">
-          <stop offset="0%" stop-color="white" />
-          <stop offset="60%" stop-color="green" />
-        </linearGradient>
-      </defs>
-      <circle cx="12" cy="12" r="8" stroke="#000" stroke-width="1" fill="#F5F5F5"></circle>`;
-          neuronContainer.appendChild(svg);
-        }
-      }
+  //       // Create and append the SVG circles
+  //       for (let i = 0; i < neuronCount; i++) {
+  //         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  //         svg.setAttribute("class", "neuron-circle");
+  //         svg.setAttribute("viewBox", "0 0 24 24");
+  //         svg.innerHTML = ` <defs>
+  //       <linearGradient id="neuron-gradient" gradientTransform="rotate(90)">
+  //         <stop offset="0%" stop-color="white" />
+  //         <stop offset="60%" stop-color="green" />
+  //       </linearGradient>
+  //     </defs>
+  //     <circle cx="12" cy="12" r="8" stroke="#000" stroke-width="1" fill="#F5F5F5"></circle>`;
+  //         neuronContainer.appendChild(svg);
+  //       }
+  //     }
 
 
 </script>

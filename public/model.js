@@ -1,7 +1,9 @@
 
+
+
 async function processCSV() {
 
-
+  
 
     var inputCount = 0;
     var csvInputs = [];
@@ -22,7 +24,7 @@ async function processCSV() {
 
 
         const units = parseInt(document.getElementById("units").value);
-        const inputshape = parseInt(document.getElementById("inputshape").value);
+        const inputshape = document.getElementById("inputshape");
         const learningrate = parseFloat(document.getElementById("learningRate").value);
         const epochs = parseFloat(document.getElementById("epochs").value);
         const activation = document.getElementById("activation").value;
@@ -75,6 +77,10 @@ async function processCSV() {
             xs.push(features); // Store features
             ys.push(target); // Store target
           }
+
+
+
+          
         
           const xsMean = tf.mean(tf.tensor2d(xs), 0);
           const xsStd = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(xs), xsMean)), 0));
@@ -88,6 +94,9 @@ async function processCSV() {
         
           // Create a TensorFlow.js model
           const model = tf.sequential();
+
+
+
           model.add(tf.layers.dense({ units: units, inputShape: [inputs.length], activation: activation }));
           model.add(tf.layers.dense({ units: 1 }));
         
@@ -96,6 +105,7 @@ async function processCSV() {
           // Train the model
           await model.fit(normalizedXs, normalizedYs, { epochs: epochs });
         
+
           // Normalize an arbitrary input value for prediction
 
           const normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), xsMean), xsStd);
