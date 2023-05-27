@@ -23,10 +23,10 @@ async function modeluploaded() {
    
 
     // Load the model
-const model = await tf.loadGraphModel(jsonmodel);
+const model = await tf.loadLayersModel('my_model.json');
 
 // Prepare the input data for prediction
-const inputData = tf.tensor2d([[csvInputs]], [1,csvInputs.length ]);
+const inputData = tf.tensor2d([[56 , 3.3]], [1,2]);
 
 // Make a prediction
 const predictions = model.predict(inputData);
@@ -36,5 +36,5 @@ const predictionValues = predictions.arraySync()[0];
 
 // Display or process the prediction results
 console.log(predictionValues);
-
+// model.summary();
 }
