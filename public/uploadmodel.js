@@ -1,5 +1,11 @@
 async function modeluploaded() {
 
+
+    
+
+
+
+
     const uploadmodel = document.getElementById("model");
 
     var jsonmodel = uploadmodel.files[0];
@@ -20,21 +26,30 @@ async function modeluploaded() {
       csvInputs.push(parseFloat(inputElement.value));
       inputCount++;
     }
-   
+
+
+    
+ 
 
     // Load the model
-const model = await tf.loadLayersModel('my_model.json');
+const model = await tf.loadLayersModel('model.json');
 
 // Prepare the input data for prediction
-const inputData = tf.tensor2d([[56 , 3.3]], [1,2]);
+
+
+
+
+
+// const inputData = tf.tensor2d([[90, 11]], [1, 2]);
 
 // Make a prediction
-const predictions = model.predict(inputData);
-
-// Get the prediction results
-const predictionValues = predictions.arraySync()[0];
-
+newInput = tf.div(tf.sub(tf.tensor1d([56,3.3]), xsMean), xsStd);
+        
+// Predict the price
+const normalizedPrediction = model.predict(newInput.reshape([1, 2]));
+const denormalizedPrediction = tf.mul(normalizedPrediction, ysStd).add(ysMean);
+const price = denormalizedPrediction.dataSync()[0];
 // Display or process the prediction results
-console.log(predictionValues);
-// model.summary();
+console.log(price);
+ model.summary();
 }

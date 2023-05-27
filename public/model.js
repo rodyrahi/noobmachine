@@ -1,5 +1,12 @@
 
 var savemodel
+var normalizedInput
+var xsMean 
+var xsStd 
+
+var ysMean 
+var ysStd 
+
 
 async function processCSV() {
 
@@ -52,8 +59,6 @@ async function processCSV() {
               .then(df => {
                 document.getElementById('output').innerText = df;
 
-              
-
               }).catch(err=>{
                 console.log(err);
               })
@@ -82,11 +87,11 @@ async function processCSV() {
 
           
         
-          const xsMean = tf.mean(tf.tensor2d(xs), 0);
-          const xsStd = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(xs), xsMean)), 0));
+          xsMean = tf.mean(tf.tensor2d(xs), 0);
+          xsStd = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(xs), xsMean)), 0));
         
-          const ysMean = tf.mean(tf.tensor2d(ys), 0);
-          const ysStd = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(ys), ysMean)), 0));
+          ysMean = tf.mean(tf.tensor2d(ys), 0);
+          ysStd = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(ys), ysMean)), 0));
         
           // Normalize the training data
           const normalizedXs = tf.div(tf.sub(tf.tensor2d(xs), xsMean), xsStd);
@@ -108,7 +113,8 @@ async function processCSV() {
 
           // Normalize an arbitrary input value for prediction
 
-          const normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), xsMean), xsStd);
+
+          normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), xsMean), xsStd);
         
           // Predict the price
           const normalizedPrediction = model.predict(normalizedInput.reshape([1, inputs.length]));
