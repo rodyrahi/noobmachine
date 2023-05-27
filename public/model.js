@@ -114,6 +114,7 @@ async function processCSV() {
           // Normalize an arbitrary input value for prediction
 
 
+
           normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), xsMean), xsStd);
         
           // Predict the price
@@ -127,7 +128,10 @@ async function processCSV() {
           <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>`
 
           savemodel = model
-
+          document.getElementById("xsmean").value=xsMean
+          document.getElementById("xsstd").value=xsStd
+          document.getElementById("ysmean").value=ysMean
+          document.getElementById("ysstd").value=ysStd
         };
         
 
