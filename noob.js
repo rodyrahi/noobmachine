@@ -134,6 +134,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const ysmean =  result[0].ysmean.slice(1, -1).split(',').map(parseFloat);
   const ysstd =  result[0].ysstd.slice(1, -1).split(',').map(parseFloat);
 
+  console.log( xsmean , xsstd ,ysmean ,ysstd);
 
 
   const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
