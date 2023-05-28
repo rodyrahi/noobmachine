@@ -145,10 +145,10 @@ app.get("/:name/:parameters", async (req, res) => {
   // Predict the price
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
   const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add( ysmean);
-  const price = denormalizedPrediction.dataSync()[0];
+  const price = normalizedPrediction.dataSync()[0];
     // Use the model for inference or further operations.
 
-  res.json(denormalizedPrediction)
+  res.json(price)
 
 
 });
