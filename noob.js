@@ -148,7 +148,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const price = denormalizedPrediction.dataSync()[0];
     // Use the model for inference or further operations.
 
-  res.json(price)
+  res.json(denormalizedPrediction)
 
 
 });
