@@ -139,7 +139,7 @@ app.get("/:name/:parameters", async (req, res) => {
 
   const newInput = tf.div(tf.sub(tf.tensor1d([56,3.3]), xsmean), xsstd);
   
-  console.log(newInput);
+  console.log(newInput.data());
   // Predict the price
   const normalizedPrediction = model.predict(newInput.reshape([1, 2]));
   const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
