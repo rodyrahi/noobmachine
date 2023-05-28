@@ -123,17 +123,27 @@ app.get("/:name/:parameters", async (req, res) => {
  const parameters = req.params.parameters
  var values = parameters.slice(1, -1).split(',').map(parseFloat);
 
+
+
   console.log(parameters);
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
   console.log(result[0]);
+
+  const xsmean =  result[0].xsmean.slice(1, -1).split(',').map(parseFloat);
+  const xsstd =  result[0].xsstd.slice(1, -1).split(',').map(parseFloat);
+  const ysmean =  result[0].ysmean.slice(1, -1).split(',').map(parseFloat);
+  const ysstd =  result[0].ysstd.slice(1, -1).split(',').map(parseFloat);
+
+
+
   const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), JSON.parse(result[0].xsmean)), JSON.parse(result[0].xsstd));
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), xsmean), xsstd);
         
   // Predict the price
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
-  const denormalizedPrediction = tf.mul(normalizedPrediction, JSON.parse(result[0].ysstd)).add( JSON.parse(result[0].ysmean));
+  const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add( ysmean);
   const price = denormalizedPrediction.dataSync()[0];
     // Use the model for inference or further operations.
 
