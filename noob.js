@@ -140,17 +140,17 @@ app.get("/:name/:parameters", async (req, res) => {
   const inputData = [56, 3.3]; // Adjust according to your input shape
 
   const mean = tf.mean(tf.tensor2d([inputData]), 0);
-  const std = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(inputData), mean)), 0));
+  const std = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d([inputData]), mean)), 0));
   
   // Normalize the input data by subtracting the mean and dividing by the standard deviation
-  const normalizedInput = tf.div(tf.sub(tf.tensor2d(inputData), mean), std).arraySync();
+  const normalizedInput = tf.div(tf.sub(tf.tensor2d([inputData]), mean), std).arraySync();
   
-  // Convert the input data to a tensor
-  const inputTensor = tf.tensor2d(normalizedInput, [1, normalizedInput.length]);
-
+  // Convert the normalized input data to a tensor
+  const inputTensor = tf.tensor2d(normalizedInput, [1, normalizedInput[0].length]);
+  
   // Perform the prediction
   const predictions = model.predict(inputTensor);
-
+  
   // Process the prediction results
   const predictionData = predictions.dataSync();
   const price = Array.from(predictionData);
