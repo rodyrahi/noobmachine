@@ -139,7 +139,7 @@ app.get("/:name/:parameters", async (req, res) => {
 
   const newInput = [0.1546003222465515, -0.8181477785110474]
   
-  console.log(newInput.data());
+
   // Predict the price
   const normalizedPrediction = model.predict(newInput.reshape([1, 2]));
   const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
