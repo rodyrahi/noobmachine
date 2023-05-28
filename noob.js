@@ -117,48 +117,35 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 });
 
 app.get("/:name/:parameters", async (req, res) => {
-
-  const api = req.params.name
-  
- const parameters = req.params.parameters
- var values = parameters.split(',').map(parseFloat);
+  const api = req.params.name;
+  const parameters = req.params.parameters;
+  var values = parameters.split(',').map(parseFloat);
 
   console.log(values);
 
   console.log(parameters);
-  const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
+  const result = await executeQuery(`SELECT xsmean, xsstd, ysmean, ysstd, models, nickname FROM clients WHERE api='${api}'`);
   console.log(result[0]);
 
-  const xsmean =  result[0].xsmean.split(',').map(parseFloat);
-  const xsstd =  result[0].xsstd.split(',').map(parseFloat);
-  const ysmean =  result[0].ysmean.split(',').map(parseFloat);
-  const ysstd =  result[0].ysstd.split(',').map(parseFloat);
+  const xsmean = result[0].xsmean.split(',').map(parseFloat);
+  const xsstd = result[0].xsstd.split(',').map(parseFloat);
+  const ysmean = result[0].ysmean.split(',').map(parseFloat);
+  const ysstd = result[0].ysstd.split(',').map(parseFloat);
 
-  console.log( xsmean , xsstd ,ysmean ,ysstd);
+  console.log(xsmean, xsstd, ysmean, ysstd);
 
-
-  const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
+  const modelPath = 'file://public/uploads/models/' + result[0].nickname + '/' + result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), xsmean), xsstd);
 
-
-
-
-
-  const normalizedInput = tf.div(tf.sub(tf.tensor1d([56,3.3]), [51.35600280761719,6.019200325012207]), [30.03873062133789,3.3236052989959717]);
-        
   // Predict the price
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
-  const denormalizedPrediction = tf.mul(normalizedPrediction, [279.32611083984375]).add([431.9320068359375]);
+  const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
   const price = denormalizedPrediction.dataSync()[0];
-    // Use the model for inference or further operations.
 
-  res.json(price)
-
-
+  res.json(price);
 });
-  
-
 
 
 
