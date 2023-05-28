@@ -1,3 +1,14 @@
+<style>
+    pre {
+      background-color: #f5f5f5;
+      padding: 10px;
+    }
+
+    code {
+      font-weight: bold;
+      color: #333; /* Change font color here */
+    }
+</style>
 <div class="border p-1 " style="border-radius: 1rem; background-color: white;">
   <!-- Options -->
   <div class=" text-center mt-2" style=" ">
@@ -126,15 +137,56 @@
       <% if (isAuthenticated) { %>
        
     
-        <div class="m-2">
-          https://noobmachine.hellosugar.io/<%= api %>/
-        </div>
-        
+      
+        <% if (credits === 0) { %>
+          <div class="row m-1 mt-3">
+            <div class="col-sm-6 m-0">
+              <div class="card bg-dark " style="color: white;">
+                <div class="card-body">
+                  <h3 class="card-title fw-bold" style="color: orangered ;">Unlimited API Access</h3>
+                  <p class="card-text">Get 1 Months Of API access </p>
+                  <h2 class="">$1/ Month </h2>
+                  <a href="#" class="btn btn-warning mt-2">Buy Now</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-6 m-0 ">
+              <div class="card bg-dark " style="color: white;">
+                <div class="card-body">
+                  <h3 class="card-title fw-bold" style="color: orangered ;">Unlimited API Access</h3>
+                  <p class="card-text">Get 1 Year Of API access </p>
+                  <h2 class="">$10/ Year </h2>
+                  <a href="#" class="btn btn-warning mt-2">Buy Now</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } else {%>
+          <div class="m-2">
+            <pre><code>
+  fetch("https://noobmachine.hellosugar.io/jzAxsqfkJco5REYb0J4ynp40RH0t/[value1 , value2 ]")
+    .then(response => response.json())
+    .then(data => {
+          console.log(data);
+          // Process the retrieved data here
+      })
+    .catch(error => {
+        console.log("Error:", error);
+      });
+            </code></pre>
+
+          </div>
+
+          <% }%>
+
         <% } else {%>
           <div class="p-2 m-2 border rounded " style="">
           
             <a class="btn btn-dark" href="/login" >LOGIN</a>
+
           </div>
+
+
         <% }%>
      
      
