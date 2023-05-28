@@ -124,7 +124,7 @@ app.get("/:name/:parameters", async (req, res) => {
 
 const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models FROM clients WHERE api='${name}'`)
 
-const model = await tf.loadLayersModel('file://model.json');
+const model = await tf.loadLayersModel('localstorage://model');
 
 
 res.json(model)
