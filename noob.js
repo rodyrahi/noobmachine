@@ -137,7 +137,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const modelPath = 'file://public/uploads/models/' + result[0].nickname + '/' + result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const normalizedInput = tf.div(tf.sub(tf.tensor1d([56,3.3]), [51.35600280761719,6.019200325012207]), [30.03873062133789,3.3236052989959717]);
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d(56,3.3), [51.35600280761719,6.019200325012207]), [30.03873062133789,3.3236052989959717]);
         
   console.log(normalizedInput.data());
   // Predict the price
