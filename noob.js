@@ -105,7 +105,7 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
     for (const fieldName in files) {
       const uploadedFile = files[fieldName][0];
       console.log('file');
-      con.query(`INSERT INTO clients (gid, models,xsmean,xsstd,ysmean,ysstd , nickname) VALUES ('${gid}', '${uploadedFile.originalname}','${xsmean}','${xsstd}','${ysmean}','${ysstd}','${req.oidc.nickname}');`);
+      con.query(`INSERT INTO clients (gid, models,xsmean,xsstd,ysmean,ysstd , nickname) VALUES ('${gid}', '${uploadedFile.originalname}','${xsmean}','${xsstd}','${ysmean}','${ysstd}','${req.oidc.user.nickname}');`);
     
     
     }
@@ -124,7 +124,6 @@ app.get("/:name/:parameters", async (req, res) => {
  var values = parameters.slice(1, -1).split(',').map(parseFloat);
 
   console.log(parameters);
-console.log(parameters.length);
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
   console.log(result[0]);
   const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
