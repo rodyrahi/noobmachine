@@ -79,7 +79,7 @@ app.use(express.static("public"));
 app.get("/", (req, res) => {
     const name = req.oidc.user.nickname;
     
-  res.render("Home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name});
+  res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name});
 });
     
 app.get("/test", (req, res) => {
