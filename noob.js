@@ -137,13 +137,20 @@ app.get("/:name/:parameters", async (req, res) => {
   const modelPath = 'file://public/uploads/models/' + result[0].nickname + '/' + result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), xsmean), xsstd);
-        
-  console.log(normalizedInput.data());
-  // Predict the price
-  const normalizedPrediction = model.predict(normalizedInput.reshape([1, values.length]));
-  const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
-  const price = denormalizedPrediction.dataSync()[0];
+  const inputData = [[0.2, 0.5]]; // Adjust according to your input shape
+
+  // Normalize or preprocess the input data if necessary
+  const normalizedInput = values; // Placeholder, adjust based on preprocessing steps
+
+  // Convert the input data to a tensor
+  const inputTensor = tf.tensor2d(normalizedInput, [1, normalizedInput.length]);
+
+  // Perform the prediction
+  const predictions = model.predict(inputTensor);
+
+  // Process the prediction results
+  const predictionData = predictions.dataSync();
+  const price = Array.from(predictionData);
   res.json(price);
 });
 
