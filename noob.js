@@ -105,7 +105,7 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
     for (const fieldName in files) {
       const uploadedFile = files[fieldName][0];
       console.log('file');
-      con.query(`INSERT INTO clients (gid, models,xsmean,xsstd,ysmean,ysstd) VALUES ('${gid}', '${uploadedFile.originalname}','${xsmean}','${xsstd}','${ysmean}','${ysstd}');`);
+      con.query(`INSERT INTO clients (gid, models,xsmean,xsstd,ysmean,ysstd , nickname) VALUES ('${gid}', '${uploadedFile.originalname}','${xsmean}','${xsstd}','${ysmean}','${ysstd}','${req.oidc.nickname}');`);
     
     
     }
@@ -118,13 +118,21 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 
 app.get("/:name/:parameters", async (req, res) => {
 
- 
-  const modelPath = 'file://model.json';
+  const {api} = req.params.name
+
+  const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
+  const modelPath = 'file://public/models/'+result[0].nickname+'/'+result[0].models;
   const model = await tf.loadLayersModel(modelPath);
-    console.log('Model loaded successfully!');
+
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), result[0].xsmean), result[0].xsstd);
+        
+  // Predict the price
+  const normalizedPrediction = model.predict(normalizedInput.reshape([1, inputs.length]));
+  const denormalizedPrediction = tf.mul(normalizedPrediction, result[0].ysstd).add( result[0].ysmean);
+  const price = denormalizedPrediction.dataSync()[0];
     // Use the model for inference or further operations.
 
-  res.json(model)
+  res.json(price)
 
 
 });
