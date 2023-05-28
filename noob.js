@@ -5,6 +5,7 @@ const multer = require('multer');
 var con = require("./database.js");
 
 const { auth } = require('express-openid-connect');
+var isWin = process.platform === "win32";
 
   const tf = require('@tensorflow/tfjs-node');
   
