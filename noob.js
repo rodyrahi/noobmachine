@@ -6,6 +6,7 @@ var con = require("./database.js");
 const path = require('path');
 const { auth } = require('express-openid-connect');
 var isWin = process.platform === "win32";
+const tf = require('@tensorflow/tfjs-node');
 
   
 
@@ -13,7 +14,6 @@ var isWin = process.platform === "win32";
 var baseurl = 'http://localhost:3333'
 if (!isWin) {
   baseurl = 'http://noobmachine.hellosugar.io'
-  const tf = require('@tensorflow/tfjs-node');
 
 }
 
