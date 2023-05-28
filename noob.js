@@ -5,14 +5,22 @@ const multer = require('multer');
 var con = require("./database.js");
 
 const { auth } = require('express-openid-connect');
-const tf = require('@tensorflow/tfjs-node');
+if (!isWin) {
+  const tf = require('@tensorflow/tfjs-node');
+  
+}
 
+var baseurl = 'http://localhost:3333'
+if (!isWin) {
+  baseurl = 'http://noobmachine.hellosugar.io'
+  
+}
 
 const config = {
   authRequired: false,
   auth0Logout: true,
   secret: 'a long, randomly-generated string stored in env',
-  baseURL: 'http://localhost:3333',
+  baseURL: baseurl,
   clientID: 'maQKj7y5gWzTyJ7Zjand8yvXKP63tBqq',
   issuerBaseURL: 'https://dev-t42orpastoaad3st.us.auth0.com'
 };
@@ -116,7 +124,7 @@ app.get("/:name/:parameters", async (req, res) => {
 
 const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models FROM clients WHERE api='${name}'`)
 
-const model = await tf.loadLayersModel('localstorage://model');
+const model = await tf.loadLayersModel('file://model.json');
 
 
 res.json(model)
