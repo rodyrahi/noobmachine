@@ -5,9 +5,9 @@ const multer = require('multer');
 var con = require("./database.js");
 const path = require('path');
 const requestIp = require('request-ip');
-const { auth } = require('express-openid-connect');
+const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
- const tf = require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs-node');
 
 app.use(requestIp.mw());
 
@@ -55,7 +55,7 @@ const storage = multer.diskStorage({
   
   const upload = multer({ storage });
 
-function executeQuery(query) {
+  function executeQuery(query) {
     return new Promise((resolve, reject) => {
       con.query(query, (err, result, fields) => {
         if (err) {
@@ -66,8 +66,7 @@ function executeQuery(query) {
       });
     });
   }
-
-
+  
 
 app.set('view engine','ejs')
 app.use(express.urlencoded({extended:false}))
@@ -77,12 +76,29 @@ app.use(express.static("public"));
 
 
 
-app.get("/", (req, res) => {
+app.get("/", async (req, res) => {
+  
+
 
   if (req.oidc.isAuthenticated()) {
     const name = req.oidc.user.nickname;
+    const gid = req.oidc.user.sub;
+    console.log(name);
+    const credits = await executeQuery(
+      `SELECT * FROM clients  WHERE gid='${gid}'`
+    );
+    console.log(credits);
+    if (credits.length <1) {
+      await executeQuery(`INSERT INTO clients (gid, nickname) VALUES ('${gid}','${req.oidc.user.nickname}');`);
+      res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name , credits:credits[0].credits});
+
+    }else{
+      res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name , credits:credits[0].credits});
+
+    }
     
-    res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name});
+
+  
   }
   res.render("home",{isAuthenticated: req.oidc.isAuthenticated()});
 
@@ -116,7 +132,7 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
         
     
      
-        con.query(`INSERT INTO clients (gid, models,xsmean,xsstd,ysmean,ysstd , nickname) VALUES ('${gid}', '${uploadedFile.originalname}','${xsmean}','${xsstd}','${ysmean}','${ysstd}','${req.oidc.user.nickname}');`);
+        con.query(`UPDATE clients SET models = '${uploadedFile.originalname}', xsmean = '${xsmean}', xsstd = '${xsstd}', ysmean = '${ysmean}', ysstd = '${ysstd}' WHERE gid = '${gid}' AND nickname = '${req.oidc.user.nickname}';`);
     
 
     
@@ -182,6 +198,10 @@ app.get("/:name/:parameters", async (req, res) => {
 
 
 
+
+app.get("/profile", requiresAuth(), (req, res) => {
+  res.send(JSON.stringify(req.oidc.user));
+});
 
 
   
