@@ -124,7 +124,7 @@ app.get("/:name/:parameters", async (req, res) => {
     console.log('Model loaded successfully!');
     // Use the model for inference or further operations.
 
-  res.sendStatus(model)
+  res.json(model)
 
 
 });
