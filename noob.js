@@ -4,11 +4,12 @@ const fs = require('fs');
 const multer = require('multer');
 var con = require("./database.js");
 const path = require('path');
+const requestIp = require('request-ip');
 const { auth } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-const tf = require('@tensorflow/tfjs-node');
+ const tf = require('@tensorflow/tfjs-node');
 
-  
+app.use(requestIp.mw());
 
 
 var baseurl = 'http://localhost:3333'
@@ -86,7 +87,7 @@ app.get("/", (req, res) => {
   res.render("home",{isAuthenticated: req.oidc.isAuthenticated()});
 
 });
-    
+
 app.get("/test", (req, res) => {
 
 res.render("test");
@@ -133,9 +134,22 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 });
 
 app.get("/:name/:parameters", async (req, res) => {
+
+
   const api = req.params.name;
   const parameters = req.params.parameters;
   var values = JSON.parse(parameters);
+
+
+  const credits = await executeQuery(`SELECT credits FROM clients WHERE api='${api}'`);
+
+  if (credits[0].credits > 0 && credits[0].credits !== -1 ) {
+    await executeQuery(`UPDATE clients
+    SET credits = credits - 1
+    WHERE api='${api}';`);
+
+  }
+
 
   console.log(values);
 

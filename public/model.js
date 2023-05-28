@@ -9,8 +9,14 @@ var ysStd
 
 
 async function processCSV() {
-
   
+  const csvFile = document.getElementById("csvFile");
+
+  if (csvFile.files.length === 0) {
+    alert('Please Select an .CSV file');
+  } else {
+
+
 
     var inputCount = 0;
     var csvInputs = [];
@@ -44,7 +50,6 @@ async function processCSV() {
 
         document.getElementById('prediction').innerHTML = `<div class="spinner-border" role="status"></div>`;
 
-         const csvFile = document.getElementById("csvFile");
          const input = csvFile.files[0];
          const reader = new FileReader();
 
@@ -147,7 +152,8 @@ async function processCSV() {
          reader.readAsText(input);
 
          // visualizeANN(model)
-
+    
+        }
 
 }
 
