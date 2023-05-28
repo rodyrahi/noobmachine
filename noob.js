@@ -6,7 +6,7 @@ var con = require("./database.js");
 const path = require('path');
 const { auth } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-const tf = require('@tensorflow/tfjs-node');
+ const tf = require('@tensorflow/tfjs-node');
 
   
 
@@ -106,25 +106,14 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
       const uploadedFile = files[fieldName][0];
       console.log('file');
 
-      const client = await executeQuery(`SELECT models FROM clients WHERE api='${gid}'`);
       if (uploadedFile.originalname.endsWith(".json")) {
         
     
-      if (!client[0].models) {
+     
         con.query(`INSERT INTO clients (gid, models,xsmean,xsstd,ysmean,ysstd , nickname) VALUES ('${gid}', '${uploadedFile.originalname}','${xsmean}','${xsstd}','${ysmean}','${ysstd}','${req.oidc.user.nickname}');`);
-      }else{
-        con.query(`
-        UPDATE clients
-        SET models = '${uploadedFile.originalname}',
-            xsmean = '${xsmean}',
-            xsstd = '${xsstd}',
-            ysmean = '${ysmean}',
-            ysstd = '${ysstd}',
-            nickname = '${req.oidc.user.nickname}'
-        WHERE gid = '${gid}';
-      `);
+    
 
-      }
+    
 
       }
 
