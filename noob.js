@@ -139,7 +139,7 @@ app.get("/:name/:parameters", async (req, res) => {
 
   const inputData = [56, 3.3]; // Adjust according to your input shape
 
-  const mean = tf.mean(tf.tensor2d(inputData), 0);
+  const mean = tf.mean(tf.tensor2d([inputData]), 0);
   const std = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(inputData), mean)), 0));
   
   // Normalize the input data by subtracting the mean and dividing by the standard deviation
