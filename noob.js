@@ -3,9 +3,10 @@ const app = express()
 const fs = require('fs');
 const multer = require('multer');
 var con = require("./database.js");
+
 const { auth } = require('express-openid-connect');
-const tf = require('@tensorflow/tfjs');
-const { parse } = require("querystring");
+const tf = require('@tensorflow/tfjs-node');
+
 
 const config = {
   authRequired: false,
@@ -72,7 +73,17 @@ app.get("/", (req, res) => {
   res.render("Home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name});
 });
     
+app.get("/test", (req, res) => {
 
+res.render("test");
+
+  
+});
+app.post("/model", (req, res) => {
+
+  res.json('hello');
+  
+});
 
 app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
   const gid = req.oidc.user.sub;
@@ -96,43 +107,23 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
   }
 });
 
-app.get("/:parameters", async (req, res) => {
+app.get("/:name/:parameters", async (req, res) => {
 
   const parameters = req.params.parameters
+  const name = req.params.name
 
-console.log(parameters);
-const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models FROM clients WHERE gid='${req.oidc.user.sub}'`)
-console.log(result[0].models);
-const modelurl=parse('uploads/models/'+req.oidc.user.nickname+'/'+result[0].models)
-
-
-console.log(modelurl);
-
-const model = await tf.loadLayersModel(tf.io.fileSystem(modelurl));
-
-// Prepare the input data for prediction
-
-
-
-
-// const inputData = tf.tensor2d([[90, 11]], [1, 2]);
-
-// Make a prediction
-const newInput = tf.div(tf.sub(tf.tensor1d([56,3.3]), result[0].xsmean), result[0].xsstd);
-        
-// Predict the price
-const normalizedPrediction = model.predict(newInput.reshape([1, 2]));
-const denormalizedPrediction = tf.mul(normalizedPrediction, result[0].ysStd).add(result[0].ysMean);
-const price = denormalizedPrediction.dataSync()[0];
-
-// res.render
   
+
+const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models FROM clients WHERE api='${name}'`)
+
+const model = await tf.loadLayersModel('localstorage://model');
+
+
+res.json(model)
+
 
 });
   
-
-
-
 
 
 

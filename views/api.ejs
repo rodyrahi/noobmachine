@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      // JSON data to be sent
+      const jsonData = {
+        name: 'John Doe',
+        age: 30,
+        email: 'johndoe@example.com'
+      };
+
+      // API endpoint to send the JSON data
+      const apiEndpoint = 'http://localhost:3333/model';
+
+      // Make an HTTP POST request to the API endpoint
+      fetch(apiEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+      })
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response from the API if needed
+          console.log(data);
+        })
+        .catch(error => {
+          console.error('Error sending JSON data:', error);
+        });
+    </script>
+  </body>
+</html>

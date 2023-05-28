@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <header><script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js" integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></header>
+  <body>
+    <h2>Data Container</h2>
+    <div id="dataContainer"></div>
+
+    <script>
+      // Fetch data from the server
+      const fetchData = async () => {
+        const htmlUrl = 'http://localhost:3333/rrt/[55,3.3]'; // Replace with the URL of the HTML page you want to fetch
+
+// Fetch the HTML content
+        const response = await fetch(htmlUrl);
+       
+        // Process the received data and update the HTML content
+        const dataContainer = document.getElementById('dataContainer');
+        dataContainer.textContent = JSON.stringify(response);
+      };
+
+      fetchData().catch((error) => {
+        console.error('Error fetching data:', error);
+      });
+    </script>
+  </body>
+</html>
