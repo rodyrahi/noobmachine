@@ -176,7 +176,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const price = denormalizedPrediction.dataSync()[0];
   res.json(price);
   }
-  res.json(404)
+  res.sendStatus(404);
 });
 
 
