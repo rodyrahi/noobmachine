@@ -13,7 +13,7 @@ const tf = require('@tensorflow/tfjs-node');
 
 var baseurl = 'http://localhost:3333'
 if (!isWin) {
-  baseurl = 'http://noobmachine.hellosugar.io'
+  baseurl = 'https://noobmachine.hellosugar.io'
 
 }
 
