@@ -121,7 +121,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const api = req.params.name
   
   const parameters = req.params.parameters
-  parameters = json.loads(parameters)
+  parameters = JSON.parse(parameters)
 
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
   console.log(result[0]);
