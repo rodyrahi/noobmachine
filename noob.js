@@ -120,8 +120,8 @@ app.get("/:name/:parameters", async (req, res) => {
 
   const api = req.params.name
   
- var parameters = req.params.parameters
-  parameters = JSON.parse(parameters)
+ const parameters = req.params.parameters
+ var values = parameters.slice(1, -1).split(',').map(parseFloat);
 
   console.log(parameters);
 console.log(parameters.length);
@@ -130,7 +130,7 @@ console.log(parameters.length);
   const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const normalizedInput = tf.div(tf.sub(tf.tensor1d([parameters]), JSON.parse(result[0].xsmean)), JSON.parse(result[0].xsstd));
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), JSON.parse(result[0].xsmean)), JSON.parse(result[0].xsstd));
         
   // Predict the price
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
