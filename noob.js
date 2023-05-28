@@ -122,7 +122,7 @@ app.get("/:name/:parameters", async (req, res) => {
 
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
   console.log(result[0]);
-  const modelPath = 'file://public/models/'+result[0].nickname+'/'+result[0].models;
+  const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
   const normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), result[0].xsmean), result[0].xsstd);
