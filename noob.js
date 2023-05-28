@@ -118,14 +118,14 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 app.get("/:name/:parameters", async (req, res) => {
 
  
-    const modelPath = path.join(__dirname, 'model.json');
-    console.log(modelPath);
-    const model = await tf.loadLayersModel(tf.io.fromJSON(modelPath));
-    console.log('Model loaded successfully!');
-    // Use the model for inference or further operations.
+    // const modelPath = path.join(__dirname, 'model.json');
+    // console.log(modelPath);
+    // const model = await tf.loadLayersModel(tf.io.fromJSON(modelPath));
+    // console.log('Model loaded successfully!');
+    // // Use the model for inference or further operations.
 
 
- res.json(model)
+ res.json()
 
 
 });
