@@ -118,7 +118,7 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 
 app.get("/:name/:parameters", async (req, res) => {
 
-  const {api} = req.params.name
+  const api = req.params.name
 
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
   console.log(result[0]);
