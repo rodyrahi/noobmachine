@@ -129,10 +129,10 @@ app.get("/:name/:parameters", async (req, res) => {
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
   console.log(result[0]);
 
-  const xsmean =  result[0].xsmean
-  const xsstd =  result[0].xsstd
-  const ysmean =  result[0].ysmean
-  const ysstd =  result[0].ysstd
+  const xsmean =  result[0].xsmean.slice(1, -1).split(',').map(parseFloat);
+  const xsstd =  result[0].xsstd.slice(1, -1).split(',').map(parseFloat);
+  const ysmean =  result[0].ysmean.slice(1, -1).split(',').map(parseFloat);
+  const ysstd =  result[0].ysstd.slice(1, -1).split(',').map(parseFloat);
 
   console.log( xsmean , xsstd ,ysmean ,ysstd);
 
