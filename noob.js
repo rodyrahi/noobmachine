@@ -6,7 +6,7 @@ var con = require("./database.js");
 const path = require('path');
 const { auth } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-const tf = require('@tensorflow/tfjs-node');
+ const tf = require('@tensorflow/tfjs-node');
 
   
 
@@ -137,12 +137,12 @@ app.get("/:name/:parameters", async (req, res) => {
   const modelPath = 'file://public/uploads/models/' + result[0].nickname + '/' + result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const newInput = await tf.div(tf.sub(tf.tensor1d([56,3.3]), xsmean), xsstd);
-  
-  console.log(newInput.data());
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d([56,3.3]), [51.35600280761719,6.019200325012207]), [30.03873062133789,3.3236052989959717]);
+        
+  console.log(normalizedInput.data());
   // Predict the price
-  const normalizedPrediction = model.predict(newInput.reshape([1, 2]));
-  const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
+  const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
+  const denormalizedPrediction = tf.mul(normalizedPrediction, [279.32611083984375]).add([431.9320068359375]);
   const price = denormalizedPrediction.dataSync()[0];
   res.json(price);
 });
