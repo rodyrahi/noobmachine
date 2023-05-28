@@ -123,12 +123,12 @@ async function processCSV() {
            ysStd = Array.from(await ysStd.data());
            console.log(xsMean , xsStd,ysMean,ysStd);
 
-          normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), [51.35600280761719,6.019200325012207]), [30.03873062133789,3.3236052989959717]);
+          normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), xsMean), xsStd);
         
           console.log(normalizedInput.data());
           // Predict the price
           const normalizedPrediction = model.predict(normalizedInput.reshape([1, inputs.length]));
-          const denormalizedPrediction = tf.mul(normalizedPrediction, [279.32611083984375]).add([431.9320068359375]);
+          const denormalizedPrediction = tf.mul(normalizedPrediction, ysStd).add(ysMean);
           const price = denormalizedPrediction.dataSync()[0];
         
           console.log('Predicted price:', price);
