@@ -123,6 +123,8 @@ app.get("/:name/:parameters", async (req, res) => {
  var parameters = req.params.parameters
   parameters = JSON.parse(parameters)
 
+  console.log(parameters);
+console.log(parameters.length);
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
   console.log(result[0]);
   const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
@@ -131,7 +133,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const normalizedInput = tf.div(tf.sub(tf.tensor1d(parameters), JSON.parse(result[0].xsmean)), JSON.parse(result[0].xsstd));
         
   // Predict the price
-  const normalizedPrediction = model.predict(normalizedInput.reshape([1, 3]));
+  const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
   const denormalizedPrediction = tf.mul(normalizedPrediction, JSON.parse(result[0].ysstd)).add( JSON.parse(result[0].ysmean));
   const price = denormalizedPrediction.dataSync()[0];
     // Use the model for inference or further operations.
