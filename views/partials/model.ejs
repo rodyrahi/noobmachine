@@ -86,6 +86,9 @@
       </div>
     </div>
     <div class="tab-pane " id="tokyo" role="tabpanel" aria-labelledby="tokyo-tab">
+      <% if (isAuthenticated) { %>
+       
+    
       <div class="p-2 m-2 border rounded " style="">
         <p> please predict the uploaded model before saving model</p>
         <form action="/savemodel" method="POST" enctype="multipart/form-data">
@@ -104,6 +107,12 @@
  
 
       </div>
+      <% } else {%>
+        <div class="p-2 m-2 border rounded " style="">
+        
+          <a class="btn btn-dark" href="/login" >LOGIN</a>
+        </div>
+      <% }%>
     </div>
 
     <div class="tab-pane " id="csv" role="tabpanel" aria-labelledby="csv-tab">
@@ -113,9 +122,22 @@
     </div>
 
     <div class="tab-pane " id="api" role="tabpanel" aria-labelledby="api-tab">
-      <div class="m-2">
-        <p>http://localhost:3333/api/ml</p>
-      </div>
+     
+      <% if (isAuthenticated) { %>
+       
+    
+        <div class="m-2">
+          https://noobmachine.hellosugar.io/<%= api %>/
+        </div>
+        
+        <% } else {%>
+          <div class="p-2 m-2 border rounded " style="">
+          
+            <a class="btn btn-dark" href="/login" >LOGIN</a>
+          </div>
+        <% }%>
+     
+     
       
 
     </div>

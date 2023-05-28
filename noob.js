@@ -4,6 +4,8 @@ const fs = require('fs');
 const multer = require('multer');
 var con = require("./database.js");
 const path = require('path');
+const crypto = require('crypto');
+
 const requestIp = require('request-ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
@@ -89,11 +91,29 @@ app.get("/", async (req, res) => {
     );
     console.log(credits);
     if (credits.length <1) {
-      await executeQuery(`INSERT INTO clients (gid, nickname) VALUES ('${gid}','${req.oidc.user.nickname}');`);
-      res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name , credits:credits[0].credits});
+
+      function generateRandomBase64(length) {
+        const buffer = crypto.randomBytes(length);
+        let base64 = buffer.toString('base64');
+        base64 = base64.replace(/\//g, '8'); // Replace '/' with '_'
+        base64 = base64.replace(/\+/g, '4'); // Replace '+' with '-'
+        base64 = base64.replace(/\=/g, 't'); // Replace '+' with '-'
+
+        return base64;
+      }
+      
+
+      // Usage example
+      const randomBase64 = generateRandomBase64(20);
+      console.log(randomBase64);
+      await executeQuery(`INSERT INTO clients (gid, nickname , api ) VALUES ('${gid}','${req.oidc.user.nickname}','${randomBase64}');`);
+      res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name , credits:credits[0].credits , api:randomBase64});
 
     }else{
-      res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name , credits:credits[0].credits});
+      const api = await executeQuery(
+        `SELECT api FROM clients  WHERE gid='${gid}'`
+      );
+      res.render("home",{isAuthenticated: req.oidc.isAuthenticated() ,  name:name , credits:credits[0].credits , api:api[0].api});
 
     }
     
