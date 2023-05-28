@@ -119,7 +119,7 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 app.get("/:name/:parameters", async (req, res) => {
   const api = req.params.name;
   const parameters = req.params.parameters;
-  var values = parameters.split(',');
+  var values = parameters.split(',').map(parseFloat);
 
   console.log(values);
 
@@ -137,7 +137,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const modelPath = 'file://public/uploads/models/' + result[0].nickname + '/' + result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), xsmean), xsstd);
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d([56 , 3.3]), xsmean), xsstd);
 
   // Predict the price
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
@@ -146,6 +146,8 @@ app.get("/:name/:parameters", async (req, res) => {
 
   res.json(price);
 });
+
+
 
 
 
