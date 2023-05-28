@@ -123,7 +123,7 @@ app.get("/:name/:parameters", async (req, res) => {
  const parameters = req.params.parameters
  var values = parameters.split(',').map(parseFloat);
 
-
+  console.log(values);
 
   console.log(parameters);
   const result = await executeQuery(`SELECT xsmean,xsstd,ysmean,ysstd,models,nickname FROM clients WHERE api='${api}'`)
