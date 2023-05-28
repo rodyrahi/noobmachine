@@ -119,7 +119,7 @@ app.get("/:name/:parameters", async (req, res) => {
 
  
     const modelPath = path.join(__dirname, 'model.json');
-
+    console.log(modelPath);
     const model = await tf.loadLayersModel(tf.io.fromJSON(modelPath));
     console.log('Model loaded successfully!');
     // Use the model for inference or further operations.
