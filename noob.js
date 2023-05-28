@@ -137,7 +137,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const modelPath = 'file://public/uploads/models/' + result[0].nickname + '/' + result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const inputData = [[56, 3.3]]; // Adjust according to your input shape
+  const inputData = [56, 3.3]; // Adjust according to your input shape
 
   const mean = tf.mean(tf.tensor2d(inputData), 0);
   const std = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(inputData), mean)), 0));
