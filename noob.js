@@ -148,7 +148,7 @@ app.get("/:name/:parameters", async (req, res) => {
     SET credits = credits - 1
     WHERE api='${api}';`);
 
-  }
+
 
 
   console.log(values);
@@ -175,6 +175,8 @@ app.get("/:name/:parameters", async (req, res) => {
   const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
   const price = denormalizedPrediction.dataSync()[0];
   res.json(price);
+  }
+  res.status(404)
 });
 
 
