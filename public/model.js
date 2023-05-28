@@ -93,10 +93,14 @@ async function processCSV() {
           ysMean = tf.mean(tf.tensor2d(ys), 0);
           ysStd = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(ys), ysMean)), 0));
         
+
+
+
           // Normalize the training data
           const normalizedXs = tf.div(tf.sub(tf.tensor2d(xs), xsMean), xsStd);
           const normalizedYs = tf.div(tf.sub(tf.tensor2d(ys), ysMean), ysStd);
         
+          console.log(normalizedXs);
           // Create a TensorFlow.js model
           const model = tf.sequential();
 
@@ -113,7 +117,11 @@ async function processCSV() {
 
           // Normalize an arbitrary input value for prediction
 
-
+          xsMean = Array.from(await xsMean.data());
+         xsStd = Array.from(await xsStd.data());
+          ysMean = Array.from(await ysMean.data());
+           ysStd = Array.from(await ysStd.data());
+           console.log(xsMean , xsStd,ysMean,ysStd);
 
           normalizedInput = tf.div(tf.sub(tf.tensor1d(csvInputs), xsMean), xsStd);
         
