@@ -131,7 +131,7 @@ app.get("/:name/:parameters", async (req, res) => {
   const normalizedInput = tf.div(tf.sub(tf.tensor1d(parameters), JSON.parse(result[0].xsmean)), JSON.parse(result[0].xsstd));
         
   // Predict the price
-  const normalizedPrediction = model.predict(normalizedInput.reshape([1, inputs.length]));
+  const normalizedPrediction = model.predict(normalizedInput.reshape([1, parameters.length]));
   const denormalizedPrediction = tf.mul(normalizedPrediction, JSON.parse(result[0].ysstd)).add( JSON.parse(result[0].ysmean));
   const price = denormalizedPrediction.dataSync()[0];
     // Use the model for inference or further operations.
