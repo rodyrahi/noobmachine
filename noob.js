@@ -140,11 +140,11 @@ app.get("/:name/:parameters", async (req, res) => {
   const modelPath = 'file://public/uploads/models/'+result[0].nickname+'/'+result[0].models;
   const model = await tf.loadLayersModel(modelPath);
 
-  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), [xsmean]), [xsstd]);
+  const normalizedInput = tf.div(tf.sub(tf.tensor1d(values), xsmean), xsstd);
         
   // Predict the price
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, 2]));
-  const denormalizedPrediction = tf.mul(normalizedPrediction, [ysstd]).add( [ysmean]);
+  const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add( ysmean);
   const price = denormalizedPrediction.dataSync()[0];
     // Use the model for inference or further operations.
 
