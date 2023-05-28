@@ -5,10 +5,10 @@ const multer = require('multer');
 var con = require("./database.js");
 
 const { auth } = require('express-openid-connect');
-if (!isWin) {
+
   const tf = require('@tensorflow/tfjs-node');
   
-}
+
 
 var baseurl = 'http://localhost:3333'
 if (!isWin) {
