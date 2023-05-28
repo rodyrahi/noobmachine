@@ -117,19 +117,15 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 
 app.get("/:name/:parameters", async (req, res) => {
 
-  async function loadModel() {
-    const modelPath = '/model.json';
-    const modelData = fs.readFileSync(modelPath, 'utf8');
-    const model = await tf.loadLayersModel(tf.io.fromJSON(modelData));
+ 
+    const modelPath = path.join(__dirname, 'model.json');
+
+    const model = await tf.loadLayersModel(tf.io.fromJSON(modelPath));
     console.log('Model loaded successfully!');
     // Use the model for inference or further operations.
-  }
-  
-  loadModel().catch((error) => {
-    console.error('Error loading the model:', error);
-  });
 
-// res.json(model)
+
+ res.json(model)
 
 
 });
