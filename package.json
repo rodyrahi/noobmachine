@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/rodyrahi/noobmachine#readme",
   "dependencies": {
+    "@tensorflow/tfjs-node": "^4.6.0",
     "cors": "^2.8.5",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
