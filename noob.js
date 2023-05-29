@@ -96,7 +96,12 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
   
-  const clientIP = req.headers['x-real-ip'];
+  const clientIP =
+    req.headers['x-real-ip'] ||
+    req.headers['x-forwarded-for'] ||
+    req.headers['cf-connecting-ip'] ||
+    req.headers['client-ip'];
+
   
   
   console.log(clientIP);
