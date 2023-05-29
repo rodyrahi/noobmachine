@@ -10,6 +10,7 @@ const IP = require('ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
 const tf = require('@tensorflow/tfjs-node');
+const { log } = require("console");
 
 // app.use(requestIp.mw({ attributeName: 'clientIp' }));
 const clientIds = new Map();
@@ -19,6 +20,9 @@ if (!isWin) {
   baseurl = 'https://noobmachine.hellosugar.io'
 
 }
+
+app.set('trust proxy' , true)
+// app.use(cors())
 
 const config = {
   authRequired: false,
@@ -92,8 +96,8 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
   
+  console.log(req.ip);
 
-  
   if (req.oidc.isAuthenticated()) {
     const name = req.oidc.user.nickname;
     const gid = req.oidc.user.sub;
