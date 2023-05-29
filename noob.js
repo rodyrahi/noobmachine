@@ -5,14 +5,14 @@ const multer = require('multer');
 var con = require("./database.js");
 const path = require('path');
 const crypto = require('crypto');
-
+const { v4: uuidv4 } = require('uuid');
 const requestIp = require('request-ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
- const tf = require('@tensorflow/tfjs-node');
+  const tf = require('@tensorflow/tfjs-node');
 
-app.use(requestIp.mw({ attributeName: 'clientIp' }));
-
+// app.use(requestIp.mw({ attributeName: 'clientIp' }));
+const clientIds = new Map();
 app.set('trust proxy', true);
 var baseurl = 'http://localhost:3333'
 if (!isWin) {
@@ -74,6 +74,18 @@ app.set('view engine','ejs')
 app.use(express.urlencoded({extended:false}))
 app.use(express.static("public"));
 
+app.use((req, res, next) => {
+  // Generate a UUID for the client
+  const clientId = uuidv4();
+
+  // Store the client ID in the request object
+  req.clientId = clientId;
+
+  // Add the client ID to the map
+  clientIds.set(clientId, true);
+
+  next();
+});
 
 
 
@@ -81,7 +93,7 @@ app.use(express.static("public"));
 app.get("/", async (req, res) => {
   
 
-
+  
   if (req.oidc.isAuthenticated()) {
     const name = req.oidc.user.nickname;
     const gid = req.oidc.user.sub;
@@ -122,7 +134,7 @@ app.get("/", async (req, res) => {
   }
 
 
-  const ip = req.ip;
+  const ip = req.clientId;
   console.log(ip);
   const isthere = await executeQuery(`SELECT * FROM ipaddress WHERE ip = '${ip}'`);
 
@@ -155,7 +167,7 @@ app.get("/visits", async (req, res) => {
     }
     res.json(valid);
   }
-  const ip = req.ip;
+  const ip = req.clientId;
 
 
   await executeQuery(`UPDATE ipaddress SET valid = valid - 1 WHERE ip = '${ip}'`);
