@@ -96,7 +96,11 @@ app.use((req, res, next) => {
 
 app.get("/", async (req, res) => {
   
-  console.log(req.ip);
+  const clientIP = req.headers['x-real-ip'];
+  
+  
+  console.log(clientIP);
+  // Retrieve client's IP address from X-Real-IP header
 
   if (req.oidc.isAuthenticated()) {
     const name = req.oidc.user.nickname;
