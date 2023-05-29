@@ -11,10 +11,14 @@ const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
 const tf = require('@tensorflow/tfjs-node');
 const { log } = require("console");
+const cors = require('cors')
+
+app.set('trust proxy', true);
+app.use(cors())
+
 
 // app.use(requestIp.mw({ attributeName: 'clientIp' }));
 const clientIds = new Map();
-app.set('trust proxy', true);
 var baseurl = 'http://localhost:3333'
 if (!isWin) {
   baseurl = 'https://noobmachine.hellosugar.io'
@@ -78,29 +82,14 @@ app.set('view engine','ejs')
 app.use(express.urlencoded({extended:false}))
 app.use(express.static("public"));
 
-app.use((req, res, next) => {
-  // Generate a UUID for the client
-  const clientId = uuidv4();
-
-  // Store the client ID in the request object
-  req.clientId = clientId;
-
-  // Add the client ID to the map
-  clientIds.set(clientId, true);
-
-  next();
-});
 
 
 
 
 app.get("/", async (req, res) => {
   
-  const clientIP =
-    req.headers['x-real-ip'] ||
-    req.headers['x-forwarded-for'] ||
-    req.headers['cf-connecting-ip'] ||
-    req.headers['client-ip'];
+  const clientIP = req.ip
+
 
   
   
