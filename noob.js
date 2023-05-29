@@ -88,7 +88,7 @@ app.use(express.static("public"));
 
 app.get("/", async (req, res) => {
   
-  const clientIP = req.ip
+  const clientIP = req.socket.remoteAddress
 
 
   
