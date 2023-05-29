@@ -120,6 +120,19 @@ app.get("/", async (req, res) => {
 
   
   }
+
+
+  const ip = req.clientIp;
+  const isthere = await executeQuery(`SELECT * FROM ipaddress WHERE ip = '${ip}'`);
+
+  if (isthere.length < 1) {
+    await executeQuery(`INSERT INTO ipaddress (ip) VALUES ('${ip}')`);
+  }else{
+    if (isthere[0].valid <1) {
+      res.redirect('/login')
+    }
+  }
+
   res.render("home",{isAuthenticated: req.oidc.isAuthenticated()});
 
 });
@@ -130,6 +143,28 @@ res.render("test");
 
   
 });
+
+
+
+app.get("/visits", async (req, res) => {
+
+  if (req.oidc.isAuthenticated()) {
+    const valid = {
+      'valid':99
+    }
+    res.json(valid);
+  }
+  const ip = req.clientIp;
+
+
+  await executeQuery(`UPDATE ipaddress SET valid = valid - 1 WHERE ip = '${ip}'`);
+  const valid = await executeQuery(`SELECT * FROM ipaddress WHERE ip = '${ip}'`);
+
+  res.json(valid[0]);
+});
+
+
+
 app.post("/model", (req, res) => {
 
   res.json('hello');

@@ -9,13 +9,29 @@ var ysStd
 
 
 async function processCSV() {
-  
+
   const csvFile = document.getElementById("csvFile");
 
   if (csvFile.files.length === 0) {
     alert('Please Select an .CSV file');
   } else {
+    fetch('visits')
+    .then(response => response.json())
+    .then(data => {
+      // Process the data
+      console.log(data);
 
+      if (data.valid < 1 ) {
+        csvInputs = [NaN]
+        window.location.href = "/login";
+
+      }
+    })
+    .catch(error => {
+      console.error('Error reading visits.json:', error);
+    });
+
+    
 
 
     var inputCount = 0;
