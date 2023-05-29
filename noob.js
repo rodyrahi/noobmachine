@@ -12,8 +12,13 @@ var isWin = process.platform === "win32";
 const tf = require('@tensorflow/tfjs-node');
 const { log } = require("console");
 const cors = require('cors')
+const expressIp = require('express-ip');
 
-// app.set('trust proxy', true);
+// Middleware to extract client IP address
+app.use(expressIp().getIpInfoMiddleware);
+
+
+
 app.use(cors())
 
 
@@ -84,11 +89,9 @@ app.use(express.static("public"));
 
 
 
-
 app.get("/", async (req, res) => {
   
-  const clientIP = req.socket.remoteAddress
-
+  const clientIP = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
   
   
