@@ -13,7 +13,7 @@ const tf = require('@tensorflow/tfjs-node');
 const { log } = require("console");
 const cors = require('cors')
 
-app.set('trust proxy', true);
+// app.set('trust proxy', true);
 app.use(cors())
 
 
@@ -25,8 +25,7 @@ if (!isWin) {
 
 }
 
-app.set('trust proxy' , true)
-// app.use(cors())
+app.enable('trust proxy')// app.use(cors())
 
 const config = {
   authRequired: false,
