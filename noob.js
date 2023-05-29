@@ -6,10 +6,10 @@ var con = require("./database.js");
 const path = require('path');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
-const requestIp = require('request-ip');
+const IP = require('ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-  const tf = require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs-node');
 
 // app.use(requestIp.mw({ attributeName: 'clientIp' }));
 const clientIds = new Map();
@@ -134,7 +134,7 @@ app.get("/", async (req, res) => {
   }
 
 
-  const ip = req.clientId;
+  const ip = IP.address();;
   console.log(ip);
   const isthere = await executeQuery(`SELECT * FROM ipaddress WHERE ip = '${ip}'`);
 
@@ -167,7 +167,7 @@ app.get("/visits", async (req, res) => {
     }
     res.json(valid);
   }
-  const ip = req.clientId;
+  const ip = IP.address();
 
 
   await executeQuery(`UPDATE ipaddress SET valid = valid - 1 WHERE ip = '${ip}'`);
