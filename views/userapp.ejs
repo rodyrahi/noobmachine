@@ -24,7 +24,7 @@
                         <% } %>
                        
                         <div class="mb-3">
-                            <h1 id="prediction" > Prediction : 5.62 </h1>
+                            <h1 id="prediction" ></h1>
     
                         </div>
                         <div class="text-center ">
@@ -79,7 +79,7 @@
 
     .then(data => {
           console.log(data);
-            document.getElementById('prediction').innerText = parseInt(data)
+            document.getElementById('prediction').innerText = data
       })
     .catch(error => {
         console.log("Error:", error);
