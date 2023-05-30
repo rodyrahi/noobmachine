@@ -269,25 +269,16 @@ app.get("/api/:name/:parameters", async (req, res) => {
   console.log(normalizedInput.data());
   // Predict the price
 
-  const normalized = []
-  
-  for (let index = 0; index < 10; index++) {
-    // const element = array[index];
-    const normalizedPrediction = model.predict(normalizedInput.reshape([1, values.length]));
-    const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
-    const price = denormalizedPrediction.dataSync()[0];
-    normalized.push(price)
-    
-  }
-  console.log(normalized);
-  const value = normalized/normalized.length
 
 
-  console.log(value);
+  const normalizedPrediction = model.predict(normalizedInput.reshape([1, values.length]));
+  const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
+  const price = denormalizedPrediction.dataSync()[0];
+
   
 
   
-  res.json(value);
+  res.json(price);
   }
   res.sendStatus(404);
 });
