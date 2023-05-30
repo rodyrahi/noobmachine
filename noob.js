@@ -279,6 +279,7 @@ app.get("/api/:name/:parameters", async (req, res) => {
     normalized.push(price)
     
   }
+  console.log(normalized);
   const value = normalized/normalized.length
 
 
