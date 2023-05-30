@@ -215,6 +215,6 @@ async function downloadCSV() {
   
   const randomString = generateRandomString(3);
 
-  await savemodel.save(`downloads://'model-${randomString}'`);
+  await savemodel.save(`downloads://model-${randomString}`);
           console.log('Model saved.');
 }
