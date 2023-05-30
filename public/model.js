@@ -108,8 +108,9 @@ async function processCSV() {
           }
 
 
+          try {
+            
 
-          
         
           xsMean = tf.mean(tf.tensor2d(xs), 0);
           xsStd = tf.sqrt(tf.mean(tf.square(tf.sub(tf.tensor2d(xs), xsMean)), 0));
@@ -133,8 +134,20 @@ async function processCSV() {
           model.add(tf.layers.dense({ units: units, inputShape: [inputs.length], activation: activation }));
           model.add(tf.layers.dense({ units: 1 }));
         
-          model.compile({ loss: lossFunctionSelect, optimizer: tf.train.sgd(learningrate) });
+          var trainalgo = document.getElementById('algorithmSelect').value
+
+          if (trainalgo === 'sgd') {
+            model.compile({ loss: lossFunctionSelect, optimizer: tf.train.sgd(learningrate) });
+
+          } else if( trainalgo === 'adam'){
+            model.compile({ loss: lossFunctionSelect, optimizer: tf.train.adam(learningrate) });
+
+          } else{
+            model.compile({ loss: lossFunctionSelect, optimizer: tf.train.rmspro(learningrate) });
+
+          } 
         
+          
           // Train the model
           await model.fit(normalizedXs, normalizedYs, { epochs: epochs });
         
@@ -165,6 +178,15 @@ async function processCSV() {
           document.getElementById("xsstd").value=xsStd
           document.getElementById("ysmean").value=ysMean
           document.getElementById("ysstd").value=ysStd
+
+
+        } catch (error) {
+          document.getElementById('log').innerHTML = error
+            console.log(error);
+        }
+        
+
+
         };
         
 

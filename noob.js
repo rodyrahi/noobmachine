@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const IP = require('ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-const tf = require('@tensorflow/tfjs-node');
+// const tf = require('@tensorflow/tfjs-node');
 const { log } = require("console");
 const cors = require('cors')
 const expressIp = require('express-ip');
@@ -150,7 +150,12 @@ app.get("/", async (req, res) => {
     await executeQuery(`INSERT INTO ipaddress (ip) VALUES ('${ip}')`);
   }else{
     if (isthere[0].valid <1) {
-      res.redirect('/login')
+      try {
+        res.redirect('/login')
+
+      } catch (error) {
+        
+      }
     }
   }
 
