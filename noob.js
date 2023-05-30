@@ -294,12 +294,14 @@ app.get("/profile", requiresAuth(), (req, res) => {
 
 
 app.get("/app/:user/:appname", async (req, res) => {
+
+  const appcreator = req.params.user
   const gid = req.oidc.user.sub;
 
 
-  const result = await executeQuery(`SELECT * FROM userapps WHERE gid='${gid}'`);
+  const result = await executeQuery(`SELECT * FROM userapps WHERE nickname='${user}'`);
 
-  const api = await executeQuery(`SELECT api FROM clients WHERE gid='${gid}'`);
+  const api = await executeQuery(`SELECT api FROM clients WHERE gid='${nickname}'`);
 
 
   res.render("userapp" , {result:result , api:api[0]});
