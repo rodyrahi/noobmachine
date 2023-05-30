@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header.ejs') %>
+
+
+<body style="background-color: black; font-family: 'Noto Sans JP', sans-serif;" >
+    <div class="container" style="color: white; display: flex; align-items: center; justify-content: center;">
+        <div class="row m-2 mt-4 p-2 ">
+            <h3 class="fw-bold" >Create Your App</h3>
+            <hr>
+            <div class="col mb-2">
+
+                <form action="/createapp" method="POST"> 
+                    <div class="mb-3">
+                        <label for="appname" class="form-label">App Name</label>
+                        <input type="text" class="form-control" id="appname" name="appname" placeholder="My APP" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="apptitle" class="form-label">App Tittle</label>
+                        <input type="text" class="form-control" id="apptitle" name="apptitle" placeholder="My Weather App" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="buttontitle" class="form-label">Button Tittle</label>
+                        <input type="text" class="form-control" id="buttontitle" name="buttontitle" placeholder="Predict Weather" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="nofields" class="form-label">Number Of Fields</label>
+                        <input type="number" class="form-control" id="nofields" name="nofields" placeholder="2" required>
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-warning btn-lg"> Create </button>
+
+                    </div>
+
+                </form> 
+            </div>
+        </div>
+    </div>
+    
+</body>

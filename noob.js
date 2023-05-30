@@ -273,7 +273,10 @@ app.get("/api/:name/:parameters", async (req, res) => {
 
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, values.length]));
   const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
-  const price = denormalizedPrediction.dataSync()[0];
+  const price =  {
+    value: denormalizedPrediction.dataSync()[0]
+  
+  };
 
   
 
@@ -284,13 +287,43 @@ app.get("/api/:name/:parameters", async (req, res) => {
 });
 
 
-
-
-
 app.get("/profile", requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
 
+
+
+app.get("/app/:user/:appname", async (req, res) => {
+  const gid = req.oidc.user.sub;
+
+
+  const result = await executeQuery(`SELECT * FROM userapps WHERE gid='${gid}'`);
+
+  const api = await executeQuery(`SELECT api FROM clients WHERE gid='${gid}'`);
+
+
+  res.render("userapp" , {result:result , api:api[0]});
+  
+});
+
+app.get("/createapp", (req, res) => {
+
+  res.render("appcreator");
+  
+  });
+
+
+app.post("/createapp", async (req, res) => {
+
+  const user = req.oidc.user.nickname;
+  const gid = req.oidc.user.sub;
+
+  const {appname , apptitle , buttontitle , nofields} = req.body
+  await executeQuery(`INSERT INTO userapps ( gid, appname , apptittle , buttontittle , noinputs ) VALUES ('${gid}','${appname}','${apptitle}','${buttontitle}',${nofields})`)
+
+  res.redirect("app/"+user +'/'+appname);
+  
+  });
 
   
 app.listen(3333)

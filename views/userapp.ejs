@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+    <title><%= result[0].appname %></title>
+
+    <%- include('./partials/header.ejs') %>
+
+
+<body style="font-family: 'Noto Sans JP', sans-serif;">
+    <div class="rounded d-flex align-items-center justify-content-center bg-black" style="height: 100vh;">
+
+
+
+        <div class="container " style=" color: white; display: flex; align-items: center; justify-content: center;">
+            <div class="row m-2 mt-4 p-2 ">
+                <h1 class="fw-bold" style="" ><%= result[0].apptittle %></h1>
+                <p style="display: none;" id="api" ><%= api.api %></p>
+                <div class="col mb-2">
+
+                    <% for( let index = 1; index <= result[0].noinputs; index++ ) { %>
+                        <div class="mb-3">
+                            <label for="input<%= index %>" class="form-label">VALUE <%= index %></label>
+                            <input type="number" class="form-control" id="input<%= index %>" name="input<%= index %>"  required>
+                        </div>
+                        <% } %>
+                       
+                        <div class="mb-3">
+                            <h1 id="prediction" > Prediction : 5.62 </h1>
+    
+                        </div>
+                        <div class="text-center ">
+                            <button class="btn btn-warning btn-lg" onclick="predict()"> <%= result[0].buttontittle %> </button>
+
+                        </div>
+                        
+
+                        <div class="text-center" style="margin-top: 6rem;">
+                            <h5 class="" >Created By</h5><h2 class="text-light m-2 mb-1 noob-heading" style="font-family: 'Oswald', sans-serif;">NOOB MACHINE</h2>
+
+                        </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+      
+</body>
+
+
+
+<script>
+    function predict() {
+
+        const api = document.getElementById('api').innerText
+        
+        var inputCount = 1;
+    var csvInputs = [];
+
+    while (true) {
+      var inputId = "input" + inputCount;
+      var inputElement = document.getElementById(inputId);
+      
+      if (!inputElement) {
+        break; // Exit the loop if there are no more inputs with the current ID
+      }
+      
+      csvInputs.push(parseFloat(inputElement.value));
+      inputCount++;
+    }
+    console.log(csvInputs);
+    
+
+        const apiurl = 'https://noobmachine.hellosugar.io/api/'+api+'/'+'['+csvInputs+']'
+
+
+        fetch(apiurl)
+        .then(response => response.json())
+
+    .then(data => {
+          console.log(data);
+            document.getElementById('prediction').innerText = parseInt(data)
+      })
+    .catch(error => {
+        console.log("Error:", error);
+      });
+    }
+</script>
+
+
+
+</html>
