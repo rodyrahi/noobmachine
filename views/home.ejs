@@ -50,6 +50,10 @@
       filter: invert(100%);
       cursor: pointer;
     }
+    .image-selected img {
+      filter: invert(100%);
+      cursor: pointer;
+    }
 
 
 
@@ -174,6 +178,12 @@
   var filename = fileInput.files[0].name;
   document.getElementById("file").innerText = filename;
 
+
+  if (  fileInput.files.length > 0) {
+
+    document.getElementById("image-container").classList.add('image-selected');
+
+  }
   const reader = new FileReader();
   reader.onload = function(event) {
     const fileContent = event.target.result;
@@ -184,12 +194,10 @@
                 //  document.getElementById('output').innerText = df.table();
 
                 // df.plot("output").table()
-                df.plot("plot_div").table()
-              }).catch(err=>{
-                console.log(err);
-              })
+              df.plot("plot_div").table()
 
-
+              df.plot("line_div").line()})
+          
 
 
     const lines = fileContent.split('\n');
@@ -227,10 +235,19 @@
 
   }
 
+
+
+
+
+
+
+
   function getcsv() {
   console.log('click');
   const fileInput = document.getElementById("csvFile");
   fileInput.click();
+
+
   }
 </script>
 

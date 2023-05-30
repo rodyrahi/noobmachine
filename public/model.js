@@ -15,6 +15,8 @@ async function processCSV() {
   if (csvFile.files.length === 0) {
     alert('Please Select an .CSV file');
   } else {
+
+
     fetch('visits')
     .then(response => response.json())
     .then(data => {
@@ -57,7 +59,8 @@ async function processCSV() {
         const learningrate = parseFloat(document.getElementById("learningRate").value);
         const epochs = parseFloat(document.getElementById("epochs").value);
         const activation = document.getElementById("activation").value;
-
+        const lossFunctionSelect = document.getElementById("lossFunctionSelect").value;
+        lossFunctionSelect
         console.log(units);
         console.log(learningrate);
         console.log(epochs);
@@ -130,7 +133,7 @@ async function processCSV() {
           model.add(tf.layers.dense({ units: units, inputShape: [inputs.length], activation: activation }));
           model.add(tf.layers.dense({ units: 1 }));
         
-          model.compile({ loss: 'meanSquaredError', optimizer: tf.train.sgd(learningrate) });
+          model.compile({ loss: lossFunctionSelect, optimizer: tf.train.sgd(learningrate) });
         
           // Train the model
           await model.fit(normalizedXs, normalizedYs, { epochs: epochs });
@@ -176,6 +179,20 @@ async function processCSV() {
 async function downloadCSV() {
 
 
-  await savemodel.save('downloads://my_model');
+  function generateRandomString(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(randomIndex);
+    }
+  
+    return result;
+  }
+  
+  const randomString = generateRandomString(3);
+
+  await savemodel.save(`downloads://'model-${randomString}'`);
           console.log('Model saved.');
 }
