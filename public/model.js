@@ -171,7 +171,11 @@ async function processCSV() {
           console.log('Predicted price:', price);
           document.getElementById('prediction').innerText = 'Prediction : ' + price;
           document.getElementById('prediction').innerHTML +=`<br>
-          <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>`
+          <button class="btn btn-primary m-2 mx-1" onclick="uploadCSV()">Upload MODEL</button>
+          <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>
+         
+
+          `
 
           savemodel = model
           document.getElementById("xsmean").value=xsMean
@@ -198,23 +202,29 @@ async function processCSV() {
 
 }
 
-async function downloadCSV() {
+function generateRandomString(length) {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-
-  function generateRandomString(length) {
-    let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  
-    for (let i = 0; i < length; i++) {
-      const randomIndex = Math.floor(Math.random() * characters.length);
-      result += characters.charAt(randomIndex);
-    }
-  
-    return result;
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    result += characters.charAt(randomIndex);
   }
-  
-  const randomString = generateRandomString(3);
+
+  return result;
+}
+
+const randomString = generateRandomString(3);
+
+async function downloadCSV() {
 
   await savemodel.save(`downloads://model-${randomString}`);
           console.log('Model saved.');
 }
+
+async function uploadCSV() {
+  await savemodel.save(`file://public/uploads/models/model-${randomString}`);
+          console.log('Model uploaded.');
+}
+
+

@@ -230,7 +230,7 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
   }
 });
 
-app.get("/:name/:parameters", async (req, res) => {
+app.get("/api/:name/:parameters", async (req, res) => {
 
 
   const api = req.params.name;
@@ -268,10 +268,25 @@ app.get("/:name/:parameters", async (req, res) => {
         
   console.log(normalizedInput.data());
   // Predict the price
-  const normalizedPrediction = model.predict(normalizedInput.reshape([1, values.length]));
-  const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
-  const price = denormalizedPrediction.dataSync()[0];
-  res.json(price);
+
+  const normalized = []
+  
+  for (let index = 0; index < 10; index++) {
+    // const element = array[index];
+    const normalizedPrediction = model.predict(normalizedInput.reshape([1, values.length]));
+    const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
+    const price = denormalizedPrediction.dataSync()[0];
+    normalized.push(price)
+    
+  }
+  const value = normalized/normalized.length
+
+
+
+  
+
+  
+  res.json(value);
   }
   res.sendStatus(404);
 });
