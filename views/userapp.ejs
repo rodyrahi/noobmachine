@@ -73,13 +73,12 @@
 
         const apiurl = 'https://noobmachine.hellosugar.io/api/'+api+'/'+'['+csvInputs+']'
 
-
         fetch(apiurl)
         .then(response => response.json())
 
     .then(data => {
           console.log(data);
-            document.getElementById('prediction').innerText = data
+            document.getElementById('prediction').innerText = data.value
       })
     .catch(error => {
         console.log("Error:", error);
