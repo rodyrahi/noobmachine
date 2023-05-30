@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const IP = require('ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-const tf = require('@tensorflow/tfjs-node');
+// const tf = require('@tensorflow/tfjs-node');
 const { log } = require("console");
 const cors = require('cors')
 const expressIp = require('express-ip');
@@ -299,9 +299,11 @@ app.get("/app/:user/:appname", async (req, res) => {
   const gid = req.oidc.user.sub;
 
 
-  const result = await executeQuery(`SELECT * FROM userapps WHERE nickname='${user}'`);
+  const api = await executeQuery(`SELECT api ,gid FROM clients WHERE nickname='${appcreator}'`);
 
-  const api = await executeQuery(`SELECT api FROM clients WHERE gid='${nickname}'`);
+
+  const result = await executeQuery(`SELECT * FROM userapps WHERE gid='${api[0].gid}'`);
+
 
 
   res.render("userapp" , {result:result , api:api[0]});
