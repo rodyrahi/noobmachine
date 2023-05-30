@@ -282,7 +282,7 @@ app.get("/api/:name/:parameters", async (req, res) => {
   const value = normalized/normalized.length
 
 
-
+  console.log(value);
   
 
   
