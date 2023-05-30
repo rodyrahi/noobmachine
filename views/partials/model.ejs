@@ -114,9 +114,15 @@
       <div class="p-2 m-2 border rounded " style="">
         <p> please predict the uploaded model before saving model</p>
         <form action="/savemodel" method="POST" enctype="multipart/form-data">
-          <input class="my-2" type="file" name="file1" id="model" accept=".json"  /><br>
-          <input class="my-2" type="file" name="file2"  accept=" .bin"  /><br>
-          <p>Select Both .bin and .json file </p>
+          <div class="mb-3">
+            <label for="model" class="form-label">Select .json file</label>
+            <input class="form-control" type="file" name="file1" id="model" accept=".json">
+          </div>
+          <div class="mb-3">
+            <label for="formFile" class="form-label">Select .bin file </label>
+            <input class="form-control" type="file" name="file2"  accept=".bin" id="formFile">
+          </div>
+
               
         <input type="text" style="display: none;" name="xsmean" id="xsmean" >
         <input type="text" style="display: none;" name="xsstd" id="xsstd">
