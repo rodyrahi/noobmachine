@@ -191,11 +191,7 @@ app.get("/visits", async (req, res) => {
 
 
 
-app.post("/model", (req, res) => {
 
-  res.json('hello');
-  
-});
 
 app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'file2', maxCount: 1 }]), async (req, res) => {
   const gid = req.oidc.user.sub;
@@ -295,8 +291,14 @@ app.get("/profile", requiresAuth(), (req, res) => {
 
 app.get("/app/:user/:appname", async (req, res) => {
 
+
+
+  try {
+    
+
   const appcreator = req.params.user
-  const gid = req.oidc.user.sub;
+  const userapp = req.params.appname
+
 
 
   const api = await executeQuery(`SELECT api ,gid FROM clients WHERE nickname='${appcreator}'`);
@@ -304,9 +306,16 @@ app.get("/app/:user/:appname", async (req, res) => {
 
   const result = await executeQuery(`SELECT * FROM userapps WHERE gid='${api[0].gid}'`);
 
+  console.log(result);
+  if (result[0].appname === userapp) {
+    res.render("userapp" , {result:result , api:api[0]});
 
+  }
+} catch (error) {
+  res.statusCode(404)
 
-  res.render("userapp" , {result:result , api:api[0]});
+}
+
   
 });
 

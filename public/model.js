@@ -223,8 +223,21 @@ async function downloadCSV() {
 }
 
 async function uploadCSV() {
-  await savemodel.save(`file://public/uploads/models/model-${randomString}`);
-          console.log('Model uploaded.');
+
+
+  const response = await fetch('/uploadmodel', {
+    method: 'POST',
+    body: savemodel
+  });
+
+  const username = document.getElementById('username').innerText
+  const randomString = Math.random().toString(36).substring(7);
+  const modelPath = 'model-' + randomString;
+
+  // Save the model to a file using tfjs-node
+  await tf.node.io.fileSystem('public/uploads/models/' + modelPath).save(model);
+
+  console.log('Model uploaded.');
 }
 
 
