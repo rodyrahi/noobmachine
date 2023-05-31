@@ -16,12 +16,12 @@
                 <p style="display: none;" id="api" ><%= api.api %></p>
                 <div class="col mb-2">
 
-                    <% for( let index = 1; index <= result[0].noinputs; index++ ) { %>
                         <div class="mb-3">
-                            <label for="input<%= index %>" class="form-label">VALUE <%= index %></label>
-                            <input type="number" class="form-control" id="input<%= index %>" name="input<%= index %>"  required>
+                            <div id="container">
+
+                            </div>
+
                         </div>
-                        <% } %>
                        
                         <div class="mb-3">
                             <h1 id="prediction" ></h1>
@@ -50,6 +50,25 @@
 
 
 <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const container = document.getElementById('container');
+
+        const htm = document.getElementById('placeholders').innerHTML.split(',');
+        
+        htm.forEach(function(placeholder) {
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'form-control mb-3';
+            input.placeholder = placeholder.trim(); // trim any whitespace around the placeholder
+        
+            container.appendChild(input);
+          });
+   
+
+})
+
+
+
     function predict() {
 
         const api = document.getElementById('api').innerText

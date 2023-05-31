@@ -9,10 +9,12 @@ const { v4: uuidv4 } = require('uuid');
 const IP = require('ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-const tf = require('@tensorflow/tfjs-node');
+// const tf = require('@tensorflow/tfjs-node');
 const { log } = require("console");
 const cors = require('cors')
 const expressIp = require('express-ip');
+const cheerio = require('cheerio');
+
 
 // Middleware to extract client IP address
 
@@ -319,9 +321,31 @@ app.get("/app/:user/:appname", async (req, res) => {
   
 });
 
-app.get("/createapp", (req, res) => {
+app.post("/startapp", (req, res) => {
 
-  res.render("appcreator");
+  const {appcols} = req.body
+  console.log(appcols);
+
+
+
+
+const placeholders = [];
+
+// Load the HTML string into Cheerio
+const $ = cheerio.load(appcols);
+
+// Find all input elements
+const inputElements = $('input');
+
+// Iterate through the input elements and extract the placeholders
+inputElements.each((index, element) => {
+  const placeholder = $(element).attr('placeholder');
+  placeholders.push(placeholder);
+});
+
+console.log(placeholders);
+
+  res.render("appcreator" , {cols:placeholders});
   
   });
 
