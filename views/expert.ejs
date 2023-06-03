@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('./partials/header.ejs') %>
+
+<body>
+    <input type="file" id="csvFile">
+    <button onclick="processCSV()"> predict</button>
+    <div id="layer-container">
+    <div id="layers" >
+        <input type="number" id="neurons" placeholder="neurons">
+        <input type="text" id="activation" placeholder="activation">
+    </div>
+    </div>
+
+    <button onclick="addlayers()">add layers</button>
+    <button onclick="getlayerValues()">getlayerValues</button>
+</body>
+<script>
+    function addlayers() {
+        const layersContainer = document.getElementById('layer-container');
+        
+        const newLayerDiv = document.createElement('div');
+        newLayerDiv.innerHTML = `
+          <input type="number" class="neurons" placeholder="neurons">
+          <input type="text" class="activation" placeholder="activation">
+        `;
+        
+        layersContainer.appendChild(newLayerDiv);
+      }
+      
+      function getlayerValues() {
+        const layerContainer = document.getElementById('layer-container');
+        const inputs = layerContainer.querySelectorAll('input');
+        
+        const inputValues = [];
+        inputs.forEach(input => {
+          inputValues.push(input.value);
+        });
+        
+        console.log(inputValues);
+      }
+      
+      function createInputs(inputShape , features) {
+        // const inputShape = parseInt(document.getElementById("inputshape").value);
+        const neuronCount = parseInt(document.getElementById("units").value);
+        const div = document.getElementById('params');
+        
+        const inputContainer = document.createElement("div");
+        inputContainer.classList.add("d-flex", "flex-column", "p-3", "bg-light", "align-items-end");
+
+        // Clear the existing inputs and circles
+        div.innerHTML = "";
+        inputContainer.innerHTML = "";
+
+        // Create and append the input fields
+        for (let index = 0; index < inputShape; index++) {
+          const input = document.createElement("input");
+          input.type = "text";
+          input.id = "input" + index;
+          input.className = 'form-control';
+          input.placeholder = features[index];
+          div.appendChild(input);
+          document.getElementById('appcols').innerText = div.innerHTML
+
+
+
+        }
+    }
+    
+    
+</script>
