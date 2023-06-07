@@ -230,11 +230,9 @@ app.post("/savemodel", upload.fields([{ name: 'file1', maxCount: 1 }, { name: 'f
 
 app.get("/api/:name/:parameters", async (req, res) => {
 
-
   const api = req.params.name;
   const parameters = req.params.parameters;
   var values = JSON.parse(parameters);
-
 
   const credits = await executeQuery(`SELECT credits FROM clients WHERE api='${api}'`);
 
@@ -242,8 +240,6 @@ app.get("/api/:name/:parameters", async (req, res) => {
     await executeQuery(`UPDATE clients
     SET credits = credits - 1
     WHERE api='${api}';`);
-
-
 
 
   console.log(values);
@@ -267,8 +263,6 @@ app.get("/api/:name/:parameters", async (req, res) => {
   console.log(normalizedInput.data());
   // Predict the price
 
-
-
   const normalizedPrediction = model.predict(normalizedInput.reshape([1, values.length]));
   const denormalizedPrediction = tf.mul(normalizedPrediction, ysstd).add(ysmean);
   const price =  {
@@ -276,12 +270,11 @@ app.get("/api/:name/:parameters", async (req, res) => {
   
   };
 
-  
-
-  
   res.json(price);
   }
-  res.sendStatus(404);
+  else{
+    res.sendStatus(404);
+  }
 });
 
 
