@@ -261,16 +261,16 @@ app.get("/profile", requiresAuth(), (req, res) => {
 });
 
 app.get("/app/:user/:appname", async (req, res) => {
-  try {
+ 
     const appcreator = req.params.user;
     const userapp = req.params.appname;
-
+    try {
     const api = await executeQuery(
       `SELECT api ,gid FROM clients WHERE nickname='${appcreator}'`
     );
 
     const result = await executeQuery(
-      `SELECT * FROM userapps WHERE gid='${api[0].gid}' AND apptittle='${userapp}'`
+      `SELECT * FROM userapps WHERE gid='${api[0].gid}' AND appname='${userapp}'`
     );
 
     console.log(result);
@@ -278,7 +278,7 @@ app.get("/app/:user/:appname", async (req, res) => {
       res.render("userapp", { result: result, api: api[0] });
     }
   } catch (error) {
-    // res.statusCode(404);
+    console.log(error);
   }
 });
 
@@ -308,23 +308,22 @@ app.post("/startapp", (req, res) => {
 app.post("/createapp", async (req, res) => {
   const user = req.oidc.user.nickname;
   const gid = req.oidc.user.sub;
-  
-
 
   const { appname, apptitle, buttontitle, fields } = req.body;
-  
+
   try {
     await executeQuery(
       `INSERT INTO userapps (gid, appname, apptittle, buttontittle, noinputs) VALUES ('${gid}','${appname}','${apptitle}','${buttontitle}','${fields}')`
     );
-    res.redirect("app/" + user + "/" + appname);
 
+    res.redirect("app/" + user + "/" + appname);
   } catch (error) {
     console.log(error);
+    // Handle the error appropriately
+    res.status(500).send("Internal Server Error");
   }
-
-
 });
+
 
 
 app.listen(3333);
