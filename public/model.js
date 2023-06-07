@@ -171,7 +171,6 @@ async function processCSV() {
           console.log('Predicted price:', price);
           document.getElementById('prediction').innerText = 'Prediction : ' + price;
           document.getElementById('prediction').innerHTML +=`<br>
-          <button class="btn btn-primary m-2 mx-1" onclick="uploadCSV()">Upload MODEL</button>
           <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>
          
 
@@ -222,22 +221,22 @@ async function downloadCSV() {
           console.log('Model saved.');
 }
 
-async function uploadCSV() {
+// async function uploadCSV() {
 
 
-  const response = await fetch('/uploadmodel', {
-    method: 'POST',
-    body: savemodel
-  });
+//   const response = await fetch('/uploadmodel', {
+//     method: 'POST',
+//     body: savemodel
+//   });
 
-  const username = document.getElementById('username').innerText
-  const randomString = Math.random().toString(36).substring(7);
-  const modelPath = 'model-' + randomString;
+//   const username = document.getElementById('username').innerText
+//   const randomString = Math.random().toString(36).substring(7);
+//   const modelPath = 'model-' + randomString;
 
-  // Save the model to a file using tfjs-node
-  await tf.node.io.fileSystem('public/uploads/models/' + modelPath).save(model);
+//   // Save the model to a file using tfjs-node
+//   await tf.node.io.fileSystem('public/uploads/models/' + modelPath).save(model);
 
-  console.log('Model uploaded.');
-}
+//   console.log('Model uploaded.');
+// }
 
 
