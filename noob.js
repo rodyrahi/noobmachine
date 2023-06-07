@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require('uuid');
 const IP = require('ip');
 const {  auth, requiresAuth  } = require('express-openid-connect');
 var isWin = process.platform === "win32";
-// const tf = require('@tensorflow/tfjs-node');
+const tf = require('@tensorflow/tfjs-node');
 const { log } = require("console");
 const cors = require('cors')
 const expressIp = require('express-ip');
@@ -188,7 +188,7 @@ app.get("/visits", async (req, res) => {
   await executeQuery(`UPDATE ipaddress SET valid = valid - 1 WHERE ip = '${ip}'`);
   const valid = await executeQuery(`SELECT * FROM ipaddress WHERE ip = '${ip}'`);
 
-  res.json(valid[0]);
+  res.json(valid);
 });
 
 
@@ -354,9 +354,9 @@ app.post("/createapp", async (req, res) => {
 
   const user = req.oidc.user.nickname;
   const gid = req.oidc.user.sub;
-
-  const {appname , apptitle , buttontitle , nofields} = req.body
-  await executeQuery(`INSERT INTO userapps ( gid, appname , apptittle , buttontittle , noinputs ) VALUES ('${gid}','${appname}','${apptitle}','${buttontitle}',${nofields})`)
+  console.log(req.body);
+  const {appname , apptitle , buttontitle , fields} = req.body
+  await executeQuery(`INSERT INTO userapps ( gid, appname , apptittle , buttontittle , noinputs ) VALUES ('${gid}','${appname}','${apptitle}','${buttontitle}','${fields}')`)
 
   res.redirect("app/"+user +'/'+appname);
   

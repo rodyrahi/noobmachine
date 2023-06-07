@@ -16,12 +16,18 @@
                 <p style="display: none;" id="api" ><%= api.api %></p>
                 <div class="col mb-2">
 
-                        <div class="mb-3">
-                            <div id="container">
+                  
+                       
+                                <% var inputs = result[0].noinputs.split(',') %>
+                                <% inputs.forEach((element, index) => { %>
+                                    <div class="mb-3">
+                                  <input class="form-control" type="text" name="input<%= index + 1 %>" id="input<%= index + 1 %>" placeholder="<%= element %>">
+                                </div>
+                                  <% }) %>
+                        
+                              
 
-                            </div>
-
-                        </div>
+                  
                        
                         <div class="mb-3">
                             <h1 id="prediction" ></h1>
@@ -91,7 +97,7 @@
     
 
         const apiurl = 'https://noobmachine.hellosugar.io/api/'+api+'/'+'['+csvInputs+']'
-
+    console.log(apiurl);
         fetch(apiurl)
         .then(response => response.json())
 

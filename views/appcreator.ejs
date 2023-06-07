@@ -11,7 +11,7 @@
             <hr>
             <div class="col mb-2">
 
-                <form action="/createapp" method="POST"> 
+                <form action="/createapp" method="POST" id=""> 
                     <div class="mb-3">
                         <label for="appname" class="form-label">App Name</label>
                         <input type="text" class="form-control" id="appname" name="appname" placeholder="My APP" required>
@@ -24,12 +24,15 @@
                         <label for="buttontitle" class="form-label">Button Tittle</label>
                         <input type="text" class="form-control" id="buttontitle" name="buttontitle" placeholder="Predict Weather" required>
                     </div>
+                    <label for="" class="mb-2">Inputs</label>
 
+                    <div class="mb-3" id="form-input">
+                    </div>
                     <div class="mb-3">
                         <button class="btn btn-warning btn-lg"> Create </button>
 
                     </div>
-                    <textarea name=""  id="placeholders" cols="30" rows="10" style="display: none;"><%= cols %></textarea>
+                    <textarea name="fields"   cols="30" rows="10" style="" id="fields" ><%= cols %></textarea>
                 </form> 
             </div>
         </div>
@@ -37,6 +40,31 @@
     
 </body>
 <script>
+
+// var textarea = document.getElementById('fields');
+
+// // Get the textarea value and split it by newline
+// var placeholders = textarea.value.split(',');
+
+// console.log(placeholders);
+// // Get the container element where the inputs will be appended
+// var container = document.getElementById('form-input');
+
+// // Clear the container
+// container.innerHTML = '';
+
+// // Generate an input element for each placeholder
+// placeholders.forEach(function(placeholder) {
+//   // Create the input element
+//   var input = document.createElement('input');
+//   input.type = 'text';
+//   input.placeholder = placeholder;
+//   input.className = 'form-control mb-3'
+//   input.name = placeholder
+
+//   // Append the input element to the container
+//   container.appendChild(input);
+// });
 
    
 </script>
