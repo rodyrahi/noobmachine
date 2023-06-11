@@ -3,75 +3,137 @@
 
 <%- include('./partials/header.ejs') %>
 
-<body>
+
+<style>
+
+.noob-heading {
+      font-family: 'Oswald', sans-serif;
+    }
+
+
+
+.form-control , .form-select{
+  border: 2px black solid;
+  border-radius: 0;
+
+}
+
+
+
+
+</style>
+<body class="bg-dark">
   <div class="container">
-    <input type="file" id="csvFile" onchange="getname()">
-    <input type="number" min="2" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape" >
-    <input type="number" step="0.01" value="0.01" class="form-control" id="learningRate">
-    <input type="number" step="1" value="1000" class="form-control" id="epochs">
 
-    <div class="mb-3">
-      <select class="form-select" id="lossFunctionSelect">
-        <option selected value="meanSquaredError">Mean Squared Error</option>
-        <option value="mean_absolute_error">Mean Absolute Error</option>
-        <option value="mean_absolute_percentage_error">Mean Absolute Percentage Error</option>
-      </select>
+    <h1 class="text-light m-2 mb-1 noob-heading">NOOB MACHINE</h1>
+    <p class="text-light m-2 my-1">ARTIFICIAL NEURAL NETWORK</p>
+
+
+      <div class="col-md-3">
+        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;">
+          <input type="file" id="csvFile" onchange="getname()">
+          <input type="number" style="display: none;" min="2" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape" >
+          <!-- <div class="range">
+            <span id="rangeValue">0</span>
+            <input type="range" step="0.01" value="0.01" class="form-range" id="learningRate" oninput="updateRangeValue()" />
+          </div> -->
+          <div class="mb-2">
+            <label for="learningRate">LearningRate</label>
+
+            <input type="number" step="0.01" value="0.01" class="form-control" id="learningRate">
+          </div>
+          <div class="mb-2">
+            <label for="epochs">Epochs(Cycles)</label>
+            <input type="number" step="1" value="1000" class="form-control" id="epochs">
+          </div>
+
+          <div class="mb-3">
+            <label for="lossFunctionSelect">Loss Function</label>
+
+            <select class="form-select" id="lossFunctionSelect">
+              <option selected value="meanSquaredError">Mean Squared Error</option>
+              <option value="mean_absolute_error">Mean Absolute Error</option>
+              <option value="mean_absolute_percentage_error">Mean Absolute Percentage Error</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="algorithmSelect">Traning Algorithm</label>
+
+            <select class="form-select" id="algorithmSelect">
+              <option value="sgd">Stochastic Gradient Descent (SGD)</option>
+              <option value="adam">Adam</option>
+              <option value="rmsprop">RMSprop</option>
+              <!-- Add more training algorithms as needed -->
+            </select>
+          </div>
+
+          <hr>
+          <div id="layer-container">
+          <div id="layers" >
+            <div class="mb-1 d-flex ">
+              <input class="form-control" id="units" type="number" class="neurons" placeholder="neurons">
+              <select class="form-select" id="activation">
+                <option value="sigmoid">Sigmoid</option>
+                <option selected value="relu">ReLU</option>
+                <option value="tanh">Tanh</option>
+              </select>
+            </div>
+          </div>
+          </div>
+
+          <button onclick="addlayers()">Add Layers</button>
+          <!-- <button onclick="getlayerValues()">Get Layer Values</button> -->
+          <div id="params" class=""></div>
+
+          <hr>
+          <h3 class=" mb-3" id="prediction"></h3>
+
+          <button onclick="processCSV()">Predict</button>
+        </div>
     </div>
 
-    <div class="mb-3">
-      <select class="form-select" id="algorithmSelect">
-        <option value="sgd">Stochastic Gradient Descent (SGD)</option>
-        <option value="adam">Adam</option>
-        <option value="rmsprop">RMSprop</option>
-        <!-- Add more training algorithms as needed -->
-      </select>
-    </div>
 
-    <hr>
-    <div id="layer-container">
-    <div id="layers" >
-      <div class="mb-1 d-flex ">
-        <input class="form-control" id="units" type="number" class="neurons" placeholder="neurons">
-        <select class="form-select" id="activation">
-          <option value="sigmoid">Sigmoid</option>
-          <option selected value="relu">ReLU</option>
-          <option value="tanh">Tanh</option>
-        </select>
-      </div>
-    </div>
-    </div>
+</div>
 
-    <button onclick="addlayers()">Add Layers</button>
-    <!-- <button onclick="getlayerValues()">Get Layer Values</button> -->
-    <div id="params" class="m-2"></div>
 
-    <hr>
-    <h3 class="m-2 mb-3" id="prediction"></h3>
-
-    <button onclick="processCSV()">Predict</button>
-  </div>
 
 </body>
 
 <script src="expertmodel.js"></script>
 <script>
+
+  function updateRangeValue() {
+    const rangeInput = document.getElementById('learningRate');
+    const rangeValue = document.getElementById('rangeValue');
+    rangeValue.textContent = rangeInput.value;
+  }
+
+
+
   function addlayers() {
     const layersContainer = document.getElementById('layer-container');
-  
+
     const newLayerDiv = document.createElement('div');
     newLayerDiv.innerHTML = `
-      <div class="mb-1 d-flex ">
-        <input class="form-control" id="units"  type="number" class="neurons" placeholder="neurons">
-        <select class="form-select" id="activation">
+      <div class="mb-1 d-flex">
+        <input class="form-control units" type="number" placeholder="Neurons">
+        <select class="form-select activation">
           <option value="sigmoid">Sigmoid</option>
           <option selected value="relu">ReLU</option>
           <option value="tanh">Tanh</option>
         </select>
+        <i class="fa-solid fa-trash m-2" style="font-size:1.3rem;" onclick="deleteLayer(this)"></i>
+
       </div>`;
-    
+
     layersContainer.appendChild(newLayerDiv);
   }
 
+  function deleteLayer(button) {
+    const layerDiv = button.parentElement;
+    layerDiv.remove();
+  }
 
 
 const layers = [];
@@ -100,11 +162,6 @@ function getlayerValues() {
     console.log(layers);
   }
 
-
-
-
-
-      
 function getname(){
   const fileInput = document.getElementById("csvFile");
   var input = fileInput.files[0];

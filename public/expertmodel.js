@@ -163,7 +163,7 @@ async function processCSV() {
           console.log('Predicted price:', price);
           document.getElementById('prediction').innerText = 'Prediction : ' + price;
           document.getElementById('prediction').innerHTML +=`<br>
-          <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>`
+          <button class="btn btn-success " onclick="downloadCSV()">Download</button>`
 
           savemodel = model
           // document.getElementById("xsmean").value=xsMean
