@@ -51,7 +51,7 @@ async function processCSV() {
         console.log(activation);
 
 
-        // document.getElementById('prediction').innerHTML = `<div class="spinner-border" role="status"></div>`;
+        document.getElementById('prediction').innerHTML = `<div class="spinner-border" role="status"></div>`;
 
          const input = csvFile.files[0];
          const reader = new FileReader();
@@ -163,7 +163,7 @@ async function processCSV() {
           console.log('Predicted price:', price);
           document.getElementById('prediction').innerText = 'Prediction : ' + price;
           document.getElementById('prediction').innerHTML +=`<br>
-          <button class="btn btn-success " onclick="downloadCSV()">Download</button>`
+          <button class="btn btn-success btn-sm " style="border: 2px black solid;"  onclick="downloadCSV()">Download</button>`
 
           savemodel = model
           // document.getElementById("xsmean").value=xsMean
