@@ -9,7 +9,7 @@ var ysStd
 
 
 async function processCSV() {
-
+  getlayerValues()
   const csvFile = document.getElementById("csvFile");
 
   if (csvFile.files.length === 0) {
@@ -44,14 +44,14 @@ async function processCSV() {
         const epochs = parseFloat(document.getElementById("epochs").value);
         const activation = document.getElementById("activation").value;
         const lossFunctionSelect = document.getElementById("lossFunctionSelect").value;
-        lossFunctionSelect
+        // lossFunctionSelect
         console.log(units);
         console.log(learningrate);
         console.log(epochs);
         console.log(activation);
 
 
-        document.getElementById('prediction').innerHTML = `<div class="spinner-border" role="status"></div>`;
+        // document.getElementById('prediction').innerHTML = `<div class="spinner-border" role="status"></div>`;
 
          const input = csvFile.files[0];
          const reader = new FileReader();
@@ -63,13 +63,13 @@ async function processCSV() {
 
  
 
-            dfd.readCSV(input) //assumes file is in CWD
-              .then(df => {
-                document.getElementById('output').innerText = df;
+            // dfd.readCSV(input) //assumes file is in CWD
+            //   .then(df => {
+            //     document.getElementById('output').innerText = df;
 
-              }).catch(err=>{
-                console.log(err);
-              })
+            //   }).catch(err=>{
+            //     console.log(err);
+            //   })
 
         
           const lines = text.split('\n');
@@ -114,8 +114,16 @@ async function processCSV() {
           const model = tf.sequential();
 
 
-
-          model.add(tf.layers.dense({ units: units, inputShape: [inputs.length], activation: activation }));
+          layers.forEach((element , index) => {
+            
+            if (index === 0) {
+              model.add(tf.layers.dense({ units: parseInt(element.units), inputShape: [inputs.length], activation: element.activation }));
+            }
+            else{
+            model.add(tf.layers.dense({ units: parseInt(element.units), inputShape: parseInt(layers[index-1].units), activation: element.activation }));
+            }
+        
+        });
           model.add(tf.layers.dense({ units: 1 }));
         
           var trainalgo = document.getElementById('algorithmSelect').value
@@ -155,21 +163,17 @@ async function processCSV() {
           console.log('Predicted price:', price);
           document.getElementById('prediction').innerText = 'Prediction : ' + price;
           document.getElementById('prediction').innerHTML +=`<br>
-          <button class="btn btn-primary m-2 mx-1" onclick="uploadCSV()">Upload MODEL</button>
-          <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>
-         
-
-          `
+          <button class="btn btn-success m-2 mx-1" onclick="downloadCSV()">Download</button>`
 
           savemodel = model
-          document.getElementById("xsmean").value=xsMean
-          document.getElementById("xsstd").value=xsStd
-          document.getElementById("ysmean").value=ysMean
-          document.getElementById("ysstd").value=ysStd
+          // document.getElementById("xsmean").value=xsMean
+          // document.getElementById("xsstd").value=xsStd
+          // document.getElementById("ysmean").value=ysMean
+          // document.getElementById("ysstd").value=ysStd
 
 
         } catch (error) {
-          document.getElementById('log').innerHTML = error
+          // document.getElementById('log').innerHTML = error
             console.log(error);
         }
         
