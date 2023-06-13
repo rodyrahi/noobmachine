@@ -161,7 +161,10 @@ async function processCSV() {
           const price = denormalizedPrediction.dataSync()[0];
         
           console.log('Predicted price:', price);
-          document.getElementById('prediction').innerText = 'Prediction : ' + price;
+
+
+
+          document.getElementById('prediction').innerText = 'Prediction : ' + Math.round(price);
           document.getElementById('prediction').innerHTML +=`<br>
           <button class="btn btn-success btn-sm " style="border: 2px black solid;"  onclick="downloadCSV()">Download</button>`
 
