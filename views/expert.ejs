@@ -80,7 +80,12 @@
 
         <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius: 10px;">
 
-          <h3>Advanced</h3>
+        <h3 data-bs-toggle="collapse" href="#Advanced" role="button" aria-expanded="false" aria-controls="Advanced" >Advanced</h3> 
+        
+        
+
+
+          <div class="collapse" id="Advanced">
           <input type="number" style="display: none;" min="2" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape" >
 
           <div class="mb-2">
@@ -115,7 +120,7 @@
           </div>
 
 
-          
+          </div>
         </div>
 
       </div>
@@ -140,6 +145,7 @@
       <div class="col-md-6">
 
         <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius: 10px;">
+          <h3>Visualization</h3>
           <canvas class=""  id="barChart" style=""></canvas>
           <canvas class=""  id="lineGraph" style=""></canvas>
 
@@ -382,5 +388,9 @@ function getcsv() {
 
   }
 </script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
 </html>
