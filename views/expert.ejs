@@ -14,7 +14,7 @@
 
 .form-control , .form-select{
   border: 2px black solid;
-  border-radius: 0;
+
 
 }
 
@@ -31,10 +31,11 @@
     <div class="row">
 
       <div class="col-md-3">
-        <div class="bg-white p-2 mt-3 shadow" style="border: 3px black solid; height: 50vh;
+        <div class="bg-white p-2 mt-3 shadow" style="border: 3px black solid; height: 20vh;
               align-content: center;
               align-items: center;
               display: flex;
+              border-radius: 10px;
               justify-content: center; /* Added to center horizontally */
               text-align: center; /* Added to center text horizontally */
               flex-direction: column; /* Added to center vertically */">
@@ -42,7 +43,7 @@
  
           <input class="" style="display: none;" type="file" id="csvFile" accept=".csv" onchange="getname()">
 
-          <div class="mb-2 me-3 p-2" style="border: 2px black solid;">
+          <div class="mb-2 me-3 p-2" style="border: 2px black solid;border-radius: 10px;">
             <button class="btn btn-success" style="border: 2px black solid;" onclick="getcsv()">UPLOAD .csv</button>
             <br>
 
@@ -50,12 +51,11 @@
 
           </div>
       
-        </div>
-      </div>
-      
+          
 
-      <div class="col-md-3">
-        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;">
+
+        </div>
+        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius:10px;">
 
           <h3>Layers</h3>
           <div id="layer-container">
@@ -72,16 +72,13 @@
             </div>
           <div class="mb-2">
 
-            <button class="btn btn-primary btn-sm" style="border: 2px black solid;" onclick="addlayers()">Add Layers</button>
+            <button class="btn btn-primary btn-sm" style="border: 2px black solid;border-radius: 10px;" onclick="addlayers()">Add Layers</button>
           </div>
 
           
         </div>
 
-      </div>
-
-      <div class="col-md-3">
-        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;">
+        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius: 10px;">
 
           <h3>Advanced</h3>
           <input type="number" style="display: none;" min="2" oninput="createInputs()" value="2" class="form-control" id="inputshape" placeholder="Number Of Input Shape" >
@@ -117,44 +114,36 @@
             </select>
           </div>
 
-       
-          <!-- <div id="layer-container">
-          <div id="layers" >
-            <div class="mb-1 d-flex ">
-              <input class="form-control me-2" id="units" type="number" class="neurons" placeholder="neurons">
-              <select class="form-select" id="activation">
-                <option value="sigmoid">Sigmoid</option>
-                <option selected value="relu">ReLU</option>
-                <option value="tanh">Tanh</option>
-              </select>
-            </div>
-          </div>
-          </div>
-          <div class="mb-2">
 
-            <button class="btn btn-primary btn-sm" style="border: 2px black solid;" onclick="addlayers()">Add Layers</button>
-          </div>
-
-          
-            <!-- <button onclick="getlayerValues()">Get Layer Values</button> -->
-          <!-- <div id="params" class=""></div>  -->
-
-       
           
         </div>
+
       </div>
+      
 
       <div class="col-md-3">
-        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;">
+        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius: 10px;">
           <h3>Parameters</h3>
           <div id="params" class=""></div>
 
           <hr>
           <h3 class=" mb-2" id="prediction"></h3>
-          <button class="btn btn-warning disabled" id="predict" style="border: 2px black solid;" onclick="processCSV()">PREDICT</button>
+          <button class="btn btn-warning disabled btn-lg" id="predict" style="border: 2px black solid;border-radius: 10px;" onclick="processCSV()">PREDICT</button>
         </div>
 
-      
+      </div>
+
+      <!-- <div class="col-md-3">
+
+      </div> -->
+
+      <div class="col-md-6">
+
+        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius: 10px;">
+          <canvas class=""  id="barChart" style=""></canvas>
+          <canvas class=""  id="lineGraph" style=""></canvas>
+
+        </div>
       </div>
 
 
@@ -229,6 +218,90 @@ function getlayerValues() {
     console.log(layers);
   }
 
+
+
+
+const csvFileInput = document.getElementById('csvFile');
+const barChartCtx = document.getElementById('barChart')
+const lineGraphCtx = document.getElementById('lineGraph')
+let barChart;
+let lineGraph;
+
+// Function to create the bar chart
+function createBarChart(labels, data) {
+  // If a bar chart instance already exists, destroy it before creating a new one
+  if (barChart) {
+    barChart.destroy();
+  }
+
+  barChart = new Chart(barChartCtx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Data',
+        data: data,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+// Function to create the line graph
+function createLineGraph(labels, data) {
+  // If a line graph instance already exists, destroy it before creating a new one
+  if (lineGraph) {
+    lineGraph.destroy();
+  }
+
+  lineGraph = new Chart(lineGraphCtx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Data',
+        data: data,
+        borderColor: 'rgba(54, 162, 235, 1)',
+        borderWidth: 1,
+        fill: false
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
+
+// Event listener for file input change
+csvFileInput.addEventListener('change', (event) => {
+  const file = event.target.files[0];
+
+  Papa.parse(file, {
+    header: true,
+    dynamicTyping: true,
+    complete: function(results) {
+      const labels = results.meta.fields;
+      const data = results.data.map(row => row[labels[0]]);
+      createBarChart(labels, data);
+      createLineGraph(labels, data);
+    }
+  });
+});
+
+
 function getname(){
 
 
@@ -247,11 +320,11 @@ function getname(){
   reader.onload = function(event) {
     const fileContent = event.target.result;
     
-    // dfd.readCSV(input) //assumes file is in CWD
-    // .then(df => {
-    // df.plot("plot_div").table()
-    // df.plot("line_div").line()})
-          
+
+
+        
+
+
     const lines = fileContent.split('\n');
     for (let i = 1; i < lines.length; i++) {
         const data = lines[i].split(',').map(parseFloat);
