@@ -126,7 +126,7 @@
         <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius: 10px;">
           
 
-          
+          <button onclick="getaccuracy()">getaccuracy</button>
           <h3>Parameters</h3>
           <div id="params" class=""></div>
 
@@ -470,7 +470,121 @@ function getcsv() {
   fileInput.click();
 
   }
+
+async  function getaccuracy() {
+  const fileInput = document.getElementById("csvFile");
+
+  var input = fileInput.files[0];
+  var filename = fileInput.files[0].name;
+
+  const reader = new FileReader();
+  reader.onload = async function(event) {
+    const fileContent = event.target.result;
+    const lines = fileContent.split('\n');
+    
+      var csvInputs = [];
+      var parentDiv = document.getElementById("params");
+      var inputElements = parentDiv.querySelectorAll('input')
+    console.log(inputElements);
+      
+      for (var i = 0; i < inputElements.length; i++) {
+        csvInputs.push(parseFloat(inputElements[i].value));
+      }
+      console.log(csvInputs);
+
+
+
+      var xtrain=[]
+      var ytrain=[]
+      var ypredictions=[]
+      var absoluteDiff=[]
+      var ape=[]
+
+    for (let index = 0; index < lines.length; index++) {
+      const data = lines[index].split(',').map(parseFloat);
+
+      const valueSelect = document.getElementById('predict-param').options[document.getElementById('predict-param').selectedIndex].value
+            const header = lines[0].split(",");
+
+            var paramindex 
+            header.forEach((element , index) => {
+              if (element.replace(/\s/g, "") === valueSelect.replace(/\s/g, "")) {
+                paramindex = index
+              }
+            });
+
+
+      var features = data.filter((_, i) => i !== paramindex);
+      var target = data.filter((_, i) => i == paramindex);
+     
+     xtrain.push(features)
+     ytrain.push(target)
+
+      
+    }
+    xtrain=xtrain.slice(0,xtrain.length/2)
+    ytrain=ytrain.slice(0,ytrain.length/2)
+
+    console.log(xtrain);
+
+    const model = await tf.loadLayersModel('model-pNk.json');
+
+
+
+xtrain.forEach((element,index) => {
+  newInput = tf.div(tf.sub(tf.tensor1d(element), xsMean), xsStd);
+        
+// Predict the price
+const normalizedPrediction = model.predict(newInput.reshape([1, 2]));
+const denormalizedPrediction = tf.mul(normalizedPrediction, ysStd).add(ysMean);
+const price = denormalizedPrediction.dataSync()[0];
+// Display or process the prediction results
+ypredictions.push(price)
+});
+
+ypredictions.forEach((element,index) => {
+  absoluteDiff.push(parseFloat(element)-parseFloat(ytrain[index]))
+});
+
+absoluteDiff.forEach((element,index) => {
+  ape.push((element/ytrain[index])*100)
+  
+});
+console.log(ypredictions);
+console.log(absoluteDiff);
+console.log(ape);
+
+let sum = 0;
+
+for (let i = 0; i < ape.length; i++) {
+  if (ape[i]) {
+    sum += ape[i];
+    sum = sum/ape.length
+    sum=100-sum
+
+  }
+}
+
+console.log(sum);
+  }
+  reader.readAsText(fileInput.files[0]);
+
+      // Load the model
+
+
+
+
+
+
+
+}
+
 </script>
+
+
+
+
+
 
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>

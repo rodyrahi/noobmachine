@@ -40,8 +40,6 @@ const model = await tf.loadLayersModel('model.json');
 
 
 
-// const inputData = tf.tensor2d([[90, 11]], [1, 2]);
-
 // Make a prediction
 newInput = tf.div(tf.sub(tf.tensor1d([56,3.3]), xsMean), xsStd);
         
