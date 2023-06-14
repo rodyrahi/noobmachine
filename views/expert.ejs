@@ -535,7 +535,7 @@ xtrain.forEach((element,index) => {
   newInput = tf.div(tf.sub(tf.tensor1d(element), xsMean), xsStd);
         
 // Predict the price
-const normalizedPrediction = model.predict(newInput.reshape([1, 2]));
+const normalizedPrediction = model.predict(newInput.reshape([1, csvinputs.length]));
 const denormalizedPrediction = tf.mul(normalizedPrediction, ysStd).add(ysMean);
 const price = denormalizedPrediction.dataSync()[0];
 // Display or process the prediction results
