@@ -20,19 +20,13 @@ async function processCSV() {
    
 
 
-    var inputCount = 0;
     var csvInputs = [];
-
-    while (true) {
-      var inputId = "input" + inputCount;
-      var inputElement = document.getElementById(inputId);
-      
-      if (!inputElement) {
-        break; // Exit the loop if there are no more inputs with the current ID
-      }
-      
-      csvInputs.push(parseFloat(inputElement.value));
-      inputCount++;
+    var parentDiv = document.getElementById("params");
+    var inputElements = parentDiv.querySelectorAll('input')
+   console.log(inputElements);
+    
+    for (var i = 0; i < inputElements.length; i++) {
+      csvInputs.push(parseFloat(inputElements[i].value));
     }
     console.log(csvInputs);
 
@@ -61,31 +55,36 @@ async function processCSV() {
          reader.onload = async function (e) {
           const text = e.target.result;
 
- 
 
-            // dfd.readCSV(input) //assumes file is in CWD
-            //   .then(df => {
-            //     document.getElementById('output').innerText = df;
-
-            //   }).catch(err=>{
-            //     console.log(err);
-            //   })
-
-        
           const lines = text.split('\n');
           const xs = [];
           const ys = [];
           let inputs;
         
-          for (let i = 1; i < lines.length; i++) {
+          for (let i = 0; i < lines.length; i++) {
             const data = lines[i].split(',').map(parseFloat);
             if (data.some(isNaN)) {
               console.log('Invalid data point:', lines[i]);
               continue;
             }
             inputs = data.slice(0, -1);
-            const features = data.slice(0, -1); // Extract all but the last element as features
-            const target = [data[data.length - 1]]; // Last element is the target
+
+            const valueSelect = document.getElementById('predict-param').options[document.getElementById('predict-param').selectedIndex].value
+            const header = lines[0].split(",");
+
+            var paramindex 
+            header.forEach((element , index) => {
+              if (element.replace(/\s/g, "") === valueSelect.replace(/\s/g, "")) {
+                paramindex = index
+              }
+            });
+            
+
+            var features = data.filter((_, i) => i !== paramindex);
+     
+            // const features = data.slice(0, -1); // Extract all but the last element as features
+            var target = data.filter((_, i) => i == paramindex);
+            console.log(paramindex);
         
             xs.push(features); // Store features
             ys.push(target); // Store target

@@ -31,37 +31,33 @@
     <div class="row">
 
       <div class="col-md-3">
-        <div class="bg-white p-2 mt-3 shadow" style="border: 3px black solid; height: 20vh;
-              align-content: center;
-              align-items: center;
-              display: flex;
-              border-radius: 10px;
-              justify-content: center; /* Added to center horizontally */
-              text-align: center; /* Added to center text horizontally */
-              flex-direction: column; /* Added to center vertically */">
 
- 
+        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius:10px;">
           <input class="" style="display: none;" type="file" id="csvFile" accept=".csv" onchange="getname()">
 
-          <div class="mb-2 me-3 p-2" style="border: 2px black solid;border-radius: 10px;">
+          <div class="mb-2  p-2" style="border: 2px black solid;border-radius: 10px;">
             <button class="btn btn-success" style="border: 2px black solid;" onclick="getcsv()">UPLOAD .csv</button>
             <br>
 
             <h5 id="file" >Select A File</h5>
 
           </div>
-      
-          
+          <hr>
+          <h3>Prediction Parameter</h3>
 
 
-        </div>
-        <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius:10px;">
+          <div class="mb-1 d-flex " >
+            <select class="form-select" oninput="changePredictParam()" id="predict-param" style="margin-right: 2.1rem;" id="activation">
+   
+            </select>
+          </div>
+
 
           <h3>Layers</h3>
           <div id="layer-container">
             <div id="layers" >
               <div class="mb-1 d-flex ">
-                <input class="form-control me-2" id="units" type="number" class="neurons" placeholder="neurons">
+                <input class="form-control me-2" id="units" type="number" class="Neurons" placeholder="neurons">
                 <select class="form-select" style="margin-right: 2.1rem;" id="activation">
                   <option value="sigmoid">Sigmoid</option>
                   <option selected value="relu">ReLU</option>
@@ -98,7 +94,7 @@
             <input type="number" step="1" value="1000" class="form-control" id="epochs">
           </div>
 
-          <div class="mb-3">
+          <div class="mb-2">
             <label for="lossFunctionSelect">Loss Function</label>
 
             <select class="form-select" id="lossFunctionSelect">
@@ -108,7 +104,7 @@
             </select>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-2">
             <label for="algorithmSelect">Traning Algorithm</label>
 
             <select class="form-select" id="algorithmSelect">
@@ -128,6 +124,9 @@
 
       <div class="col-md-3">
         <div class=" bg-white p-2 mt-3 shadow" style="border: 3px black solid;border-radius: 10px;">
+          
+
+          
           <h3>Parameters</h3>
           <div id="params" class=""></div>
 
@@ -308,6 +307,51 @@ csvFileInput.addEventListener('change', (event) => {
 });
 
 
+function changePredictParam() {
+  
+  const fileInput = document.getElementById("csvFile");
+
+  var input = fileInput.files[0];
+
+  if (  fileInput.files.length > 0) {
+
+  }
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const fileContent = event.target.result;
+
+    const lines = fileContent.split('\n');
+
+
+    for (let i = 1; i < lines.length; i++) {
+        const data = lines[i].split(',').map(parseFloat);
+        if (data.some(isNaN)) {
+          continue;
+        }
+        
+
+        const features = data.slice(0,-1);
+        const header = lines[0].split(",");
+
+        document.getElementById("inputshape").value = features.length;
+
+  
+     
+        createInputs(features.length , header)
+
+      }
+      // drawANNLayers()
+    };
+
+reader.readAsText(fileInput.files[0]);
+
+
+}
+
+
+
+
+
 function getname(){
 
 
@@ -328,10 +372,28 @@ function getname(){
     
 
 
-        
 
 
     const lines = fileContent.split('\n');
+
+
+  
+    const labels = lines[0].split(',')
+    const layersContainer = document.getElementById('predict-param');
+
+
+    layersContainer.innerHTML= ''
+    labels.forEach(element => {
+      if (element) {
+
+          createYSLabels(element);
+        }
+    });
+   
+
+   
+    console.log(document.getElementById('predict-param').options[document.getElementById('predict-param').selectedIndex].value);
+
     for (let i = 1; i < lines.length; i++) {
         const data = lines[i].split(',').map(parseFloat);
         if (data.some(isNaN)) {
@@ -340,11 +402,14 @@ function getname(){
           continue;
         }
         
-        const features = data.slice(0, -1); // Extract all but the last element as features
-        const target = [data[data.length - 1]]; // Last element is the target
+
+        const features = data.slice(0,-1);
         const header = lines[0].split(",");
 
+      
         document.getElementById("inputshape").value = features.length;
+
+
         createInputs(features.length , header)
 
       }
@@ -355,7 +420,8 @@ reader.readAsText(fileInput.files[0]);
 
 }
 
-function createInputs(inputShape , features) {
+function createInputs(inputShape , header) {
+  
 
     const div = document.getElementById('params');
     
@@ -367,16 +433,33 @@ function createInputs(inputShape , features) {
     inputContainer.innerHTML = "";
 
     // Create and append the input fields
-    for (let index = 0; index < inputShape; index++) {
-      const input = document.createElement("input");
-      input.type = "text";
-      input.id = "input" + index;
-      input.className = 'form-control mb-2';
-      input.placeholder = features[index];
-      div.appendChild(input);
-      // document.getElementById('appcols').innerText = div.innerHTML
+    for (let index = 0; index <= inputShape; index++) {
 
+      const valueSelect = document.getElementById('predict-param').options[document.getElementById('predict-param').selectedIndex].value
+   
+      if (header[index].replace(/\s/g, "") !== valueSelect.replace(/\s/g, "")) {
+        
+        
+        const input = document.createElement("input");
+        input.type = "text";
+        input.id = "input" + index;
+        input.className = 'form-control mb-2';
+        input.placeholder = header[index];
+        div.appendChild(input);
+      // document.getElementById('appcols').innerText = div.innerHTML
+      }
     }
+}
+
+
+function createYSLabels(header) {
+  const layersContainer = document.getElementById('predict-param');
+
+
+      layersContainer.innerHTML += `<option value="${header}">${header}</option>`;
+
+
+
 }
 
 
