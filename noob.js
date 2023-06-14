@@ -77,6 +77,11 @@ app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("public"));
 
+
+app.get("/profile", requiresAuth(), (req, res) => {
+  res.send(JSON.stringify(req.oidc.user));
+});
+
 app.get("/", async (req, res) => {
   const clientIP = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
 
@@ -118,7 +123,7 @@ app.get("/", async (req, res) => {
       const api = await executeQuery(
         `SELECT api FROM clients  WHERE gid='${gid}'`
       );
-      res.render("home", {
+      res.render("expert", {
         isAuthenticated: req.oidc.isAuthenticated(),
         name: name,
         credits: credits[0].credits,
@@ -138,17 +143,16 @@ app.get("/", async (req, res) => {
   } else {
     if (isthere[0].valid < 1) {
       try {
-        res.redirect("/login");
+        res.render("login");
       } catch (error) {}
     }
   }
-
-  res.render("home", { isAuthenticated: req.oidc.isAuthenticated() });
+  // res.render("expert");
+  // res.render("home", { isAuthenticated: req.oidc.isAuthenticated() });
 });
 
-app.get("/test", (req, res) => {
-  res.render("expert");
-});
+
+
 
 app.get("/visits", async (req, res) => {
   if (req.oidc.isAuthenticated()) {
@@ -256,9 +260,7 @@ app.get("/api/:name/:parameters", async (req, res) => {
   }
 });
 
-app.get("/profile", requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user));
-});
+
 
 app.get("/app/:user/:appname", async (req, res) => {
  
