@@ -47,20 +47,15 @@ async function processCSV() {
 
         document.getElementById('prediction').innerHTML = `<div class="spinner-border" role="status"></div>`;
 
-         const input = csvFile.files[0];
-         const reader = new FileReader();
 
-   
-
-         reader.onload = async function (e) {
-          const text = e.target.result;
-
-
-          const lines = text.split('\n');
           const xs = [];
           const ys = [];
           let inputs;
-        
+          const lines = await getData(csvFile) 
+
+
+          console.log(lines);
+
           for (let i = 0; i < lines.length; i++) {
             const data = lines[i].split(',').map(parseFloat);
             if (data.some(isNaN)) {
@@ -90,6 +85,7 @@ async function processCSV() {
             ys.push(target); // Store target
           }
 
+          console.log(xs);
 
           try {
             
@@ -168,27 +164,15 @@ async function processCSV() {
           <button class="btn btn-success btn-sm " style="border: 2px black solid;"  onclick="downloadCSV()">Download</button>`
 
           savemodel = model
-          // document.getElementById("xsmean").value=xsMean
-          // document.getElementById("xsstd").value=xsStd
-          // document.getElementById("ysmean").value=ysMean
-          // document.getElementById("ysstd").value=ysStd
+
 
 
         } catch (error) {
-          // document.getElementById('log').innerHTML = error
+
             console.log(error);
         }
-        
-
-
         };
         
-
-         reader.readAsText(input);
-
-         // visualizeANN(model)
-    
-        }
 
 }
 
