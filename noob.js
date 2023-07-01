@@ -9,7 +9,7 @@ const crypto = require("crypto");
 const IP = require("ip");
 const { auth, requiresAuth } = require("express-openid-connect");
 var isWin = process.platform === "win32";
-// const tf = require("@tensorflow/tfjs-node");
+const tf = require("@tensorflow/tfjs-node");
 
 const cors = require("cors");
 const expressIp = require("express-ip");
