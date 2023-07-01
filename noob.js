@@ -147,6 +147,8 @@ app.get("/", async (req, res) => {
       } catch (error) {}
     }
   }
+
+  res.render("login");
   // res.render("expert");
   // res.render("home", { isAuthenticated: req.oidc.isAuthenticated() });
 });
